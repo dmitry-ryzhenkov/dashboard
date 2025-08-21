@@ -1,0 +1,118 @@
+import requests
+
+import numpy as np
+import pandas as pd
+
+from utils import replace_ids_with_names
+
+import streamlit as st
+
+# DATA -------------------------------------------------------------------------
+def extract_airtable(app: str, tbl: str, token: str) -> pd.DataFrame:
+    url = f"https://api.airtable.com/v0/{app}/{tbl}"
+
+    response = requests.get(url, headers={"Authorization" : f"Bearer {token}"})
+    data = response.json()
+    records = data["records"]
+
+    while "offset" in data.keys():
+        r = requests.get(url, headers={"Authorization" : f"Bearer {token}"}, params={"offset" : data["offset"]})
+        data = r.json()
+        records.extend(data["records"])
+
+    return pd.json_normalize(records)
+
+def load_data() -> pd.DataFrame:
+
+    AIRTABLE_API_KEY = st.secrets.get("AIRTABLE_API_KEY")
+
+    app_id = "appACxf1z2b7fsR44"
+    table_id = "tblNBHV9KDGDQNs8y"
+    df = extract_airtable(app_id, table_id, AIRTABLE_API_KEY)
+
+    # -------------------------------------
+
+    table_id = "tblk2itGEWE7ePo73"
+    df_roles = extract_airtable(app_id, table_id, AIRTABLE_API_KEY)
+
+    # -------------------------------------
+
+    table_id = "tblXhF1lZUBKiNixP"
+    df_tecnologias = extract_airtable(app_id, table_id, AIRTABLE_API_KEY)
+
+    # -------------------------------------
+
+    table_id = "tblLUDGmhm7otZhGp"
+    df_comp_tecnicas = extract_airtable(app_id, table_id, AIRTABLE_API_KEY)
+
+    # -------------------------------------
+
+    table_id = "tblvuUUjjnUvdS1z1"
+    df_comp_blandas = extract_airtable(app_id, table_id, AIRTABLE_API_KEY)
+
+    # -------------------------------------
+
+    # table_id = "tblGy8pLPexkcpJcq"
+    # df_prubas_tec = extract_airtable(app_id, table_id, AIRTABLE_API_KEY)
+
+    # -------------------------------------
+
+    table_id = "tblDZzmvFmWfMbmx5"
+    df_vert = extract_airtable(app_id, table_id, AIRTABLE_API_KEY)
+
+    # CLEANING -------------------------------------------------------------------------
+
+    df = df[[
+        "id", "fields.Nombre", "fields.Status", "fields.Email", "fields.Nivel", "fields.Rol que le corresponde",
+        "fields.Puesto actual", "fields.Nueva vertical", "fields.Veredicto", "fields.Equipo",
+        "fields.Resultado de la prueba (from Pruebas técnicas)",
+        "fields.Tecnologías (from Rol que le corresponde)", "fields.Tecnologías actuales Selección IT",
+        "fields.Competencias técnicas (from Rol que le corresponde)", "fields.Competencias técnicas Selección IT",
+        "fields.Competencia blanda (from Rol que le corresponde)", "fields.Competencias blandas Selección IT",
+        "fields.Puntaje Negocio (from Pruebas técnicas)"
+        ]]
+
+    df.columns = df.columns.str.lower().str.replace("fields.", "")
+
+    rename = {
+        "nivel" : "rol",
+        "resultado de la prueba (from pruebas técnicas)" : "prueba_tecnica",
+        "tecnologías (from rol que le corresponde)" : "tecnologias_necesarias",
+        "tecnologías actuales selección it" : "tecnologias",
+        "competencias técnicas (from rol que le corresponde)" : "competencias_tecnicas_necesarias",
+        "competencias técnicas selección it" : "competencias_tecnicas",
+        "competencia blanda (from rol que le corresponde)" : "competencias_blandas_necesarias",
+        "competencias blandas selección it" : "competencias_blandas",
+        "puntaje negocio (from pruebas técnicas)" : "prueba_negocio"
+    }
+
+    df = df.rename(columns=rename)
+    df.columns = df.columns.str.replace(" ", "_")
+
+    # -------------------------------------
+
+    df.loc[: ,["rol", "rol_que_le_corresponde", "nueva_vertical", "prueba_tecnica", "prueba_negocio"]] = df[["rol", "rol_que_le_corresponde", "nueva_vertical", "prueba_tecnica", "prueba_negocio"]].map(lambda x: x[0] if isinstance(x, list) else np.nan)
+    df = df[df["status"] == "Evaluación completada"]
+
+    # -------------------------------------
+
+    df = pd.merge(left=df, right=df_roles[["id", "fields.Nivel de carrera MAPFRE"]], left_on="rol", right_on="id", how="left", suffixes=["", "_ext"]).drop(["id_ext", "rol"], axis=1)
+    df = df.rename(columns={"fields.Nivel de carrera MAPFRE" : "rol"})
+
+    df = pd.merge(left=df, right=df_roles[["id", "fields.Nivel de carrera MAPFRE"]], left_on="rol_que_le_corresponde", right_on="id", how="left", suffixes=["", "_ext"]).drop(["id_ext", "rol_que_le_corresponde"], axis=1)
+    df = df.rename(columns={"fields.Nivel de carrera MAPFRE" : "rol_que_le_corresponde"})
+
+    df = pd.merge(left=df, right=df_vert[["id", "fields.Vertical"]], left_on="nueva_vertical", right_on="id", how="left", suffixes=["", "_ext"]).drop(["id_ext", "nueva_vertical"], axis=1)
+    df = df.rename(columns={"fields.Vertical" : "nueva_vertical"})
+
+    # -------------------------------------
+
+    df = replace_ids_with_names(df, df_tecnologias, "id", "fields.Nombre", "tecnologias")
+    df = replace_ids_with_names(df, df_tecnologias, "id", "fields.Nombre", "tecnologias_necesarias")
+
+    df = replace_ids_with_names(df, df_comp_tecnicas, "id", "fields.Nombre", "competencias_tecnicas_necesarias")
+    df = replace_ids_with_names(df, df_comp_tecnicas, "id", "fields.Nombre", "competencias_tecnicas")
+
+    df = replace_ids_with_names(df, df_comp_blandas, "id", "fields.Nombre", "competencias_blandas_necesarias")
+    df = replace_ids_with_names(df, df_comp_blandas, "id", "fields.Nombre", "competencias_blandas")
+    return df
