@@ -116,3 +116,22 @@ def load_data() -> pd.DataFrame:
     df = replace_ids_with_names(df, df_comp_blandas, "id", "fields.Nombre", "competencias_blandas_necesarias")
     df = replace_ids_with_names(df, df_comp_blandas, "id", "fields.Nombre", "competencias_blandas")
     return df
+
+# -------------------------------------
+
+def extract_all_airtable(tables_id: dict) -> dict:
+
+    AIRTABLE_API_KEY = st.secrets.get("AIRTABLE_API_KEY")
+
+    app_id = "appACxf1z2b7fsR44"
+
+    df_dicts = dict()
+    for k, v in tables_id.items():
+        
+        df_bucle = extract_airtable(app = app_id, tbl = v, token = AIRTABLE_API_KEY).drop(["createdTime"], axis = 1)
+
+        df_bucle.columns = [col.replace("fields.", "") for col in df_bucle.columns]
+
+        df_dicts[k] = df_bucle
+        
+    return df_dicts

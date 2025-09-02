@@ -1,11 +1,13 @@
 import streamlit as st
 
 # Import your custom modules
+from tables import tables_id
 from utils import filtrar
-from data import load_data
+from data import load_data, extract_all_airtable
 import soft
 import tech
 import tech_
+import overview_
 
 # ---------------------------------------------------------------------------------------------
 # Page Configuration and Data Loading
@@ -48,7 +50,7 @@ df_filtered = filtrar(df, selected_vertical, selected_rol)
 
 # --- Tabs ---
 # Streamlit's st.tabs is a direct replacement for dcc.Tabs
-tab1, tab2 = st.tabs(["Soft Skills", "Tech Skills"], width="stretch")
+tab1, tab2, tab3 = st.tabs(["Soft Skills", "Tech Skills", "Overview"], width="stretch")
 
 
 # --- Tab 1: Soft Skills Content ---
@@ -95,3 +97,23 @@ with tab2:
         # Display the charts one after another
         st.plotly_chart(tech_fig_1, use_container_width=True)
         st.plotly_chart(tech_fig_2, use_container_width=True)
+
+# --- Tab 3: Overwiev Content ---
+with tab3:
+    st.header("Análisis General")
+    
+    # Check if the filtered DataFrame is empty
+    if df_filtered.empty:
+        st.warning("No hay datos para la selección actual.")
+    else:
+        df_dicts = extract_all_airtable(tables_id = tables_id)
+        # Get the figures from your 'tech' and 'tech_' modules
+        tech_fig_1 = overview_.primera_grafica(df_dicts = df_dicts)
+        tech_fig_2 = overview_.segunda_grafica(df_dicts = df_dicts)
+
+        # Display the charts one after another
+        st.plotly_chart(tech_fig_1, use_container_width=True)
+        st.plotly_chart(tech_fig_2, use_container_width=True)
+
+
+
