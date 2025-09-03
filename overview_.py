@@ -116,6 +116,7 @@ def grafica_veredicto_vertical(df_dicts):
 
 # Rol y Veredicto
 def grafica_veredicto_rol(df_dicts):
+    
     df_rol_veredicto = pd.merge(left = df_dicts["Trabajadores"].explode("Nuevo puesto").groupby(by = ["Nuevo puesto", "Veredicto"], as_index = False).agg({"id" : "count"}),
                                 right = df_dicts["Roles"][["Nivel de carrera MAPFRE", "Puesto"]],
                                 left_on = "Nuevo puesto",

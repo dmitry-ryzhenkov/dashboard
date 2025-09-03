@@ -61,6 +61,14 @@ with tab1:
     if df_filtered.empty:
         st.warning("No hay datos para la selección actual.")
     else:
+
+        # color_filter = st.multiselect(label = "Filtro", options = ["Verde", "Azul", "Amarillo", "Rojo"])
+        # color_map = {"Rojo" : "#CD5C5C",
+        #              "Amarillo" : "#BDB76B",
+        #              "Verde" : "#8FBC8F",
+        #              "Azul" : "#6495ED"}
+
+        # color_filter = [color_map[color] for color in color_filter]
         # Get the figures from your 'soft' module
         fig1, fig2, fig3, fig4, fig5 = soft.get_soft_skills_scores_figs(df_filtered)
 

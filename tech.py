@@ -6,6 +6,7 @@ import pandas as pd
 import plotly.graph_objects as go
 
 from utils import get_color
+import streamlit as st
 
 def extract_comp_data(comp: str) -> tuple[str, int]:
     """Extrae información de las competencias blandas. Retorna la competencia en cuestion y el nivel en formato tupla."""
@@ -73,6 +74,10 @@ def get_tech_skills_scores_figs(df):
         
     colors = [get_color(average_levels[skill], required_levels[skill])
             for skill in required_levels]
+    
+    # st.write(average_levels, len(average_levels))
+    # st.write(std_levels, len(std_levels))
+    # st.write(required_levels, len(required_levels))
 
     fig = go.Figure()
 
