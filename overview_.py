@@ -93,7 +93,7 @@ def segunda_grafica(df_dicts):
 
 # Vertical y Veredicto
 def grafica_veredicto_vertical(df_dicts):
-    
+
     df_vertical_veredicto = pd.merge(left = df_dicts["Trabajadores"].explode("Nueva vertical").groupby(by = ["Nueva vertical", "Veredicto"], as_index = False).agg({"id" : "count"}),
                                     right = df_dicts["Verticales"][["id", "Vertical"]],
                                     left_on = "Nueva vertical",
@@ -110,6 +110,6 @@ def grafica_veredicto_vertical(df_dicts):
     df_vertical_veredicto["Veredicto"] = pd.Categorical(df_vertical_veredicto["Veredicto"], categories = veredicto_orden, ordered = True)
     df_vertical_veredicto = df_vertical_veredicto.sort_values("Veredicto")
     
-    fig = px.bar(data_frame = df_vertical_veredicto, x = "Vertical", y = "count", color = "Veredicto")
+    fig = px.bar(data_frame = df_vertical_veredicto, x = "Veredicto", y = "count", color = "Vertical")
 
     return fig
