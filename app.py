@@ -110,7 +110,7 @@ with tab3:
         # Get the figures from your 'tech' and 'tech_' modules
         overview_fig_1 = overview_.primera_grafica(df_dicts = df_dicts)
         overview_fig_2 = overview_.segunda_grafica(df_dicts = df_dicts)
-        overview_fig_3 = overview_.grafica_veredicto(df_dicts = df_dicts)
+        overview_fig_3 = overview_.grafica_veredicto_vertical(df_dicts = df_dicts)
 
         # Display the charts one after another
         st.plotly_chart(overview_fig_1, use_container_width=True)
