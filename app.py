@@ -108,12 +108,14 @@ with tab3:
     else:
         df_dicts = extract_all_airtable(tables_id = tables_id)
         # Get the figures from your 'tech' and 'tech_' modules
-        tech_fig_1 = overview_.primera_grafica(df_dicts = df_dicts)
-        tech_fig_2 = overview_.segunda_grafica(df_dicts = df_dicts)
+        overview_fig_1 = overview_.primera_grafica(df_dicts = df_dicts)
+        overview_fig_2 = overview_.segunda_grafica(df_dicts = df_dicts)
+        overview_fig_3 = overview_.grafica_veredicto(df_dicts = df_dicts)
 
         # Display the charts one after another
-        st.plotly_chart(tech_fig_1, use_container_width=True)
-        st.plotly_chart(tech_fig_2, use_container_width=True)
+        st.plotly_chart(overview_fig_1, use_container_width=True)
+        st.plotly_chart(overview_fig_2, use_container_width=True)
+        st.plotly_chart(overview_fig_3, use_container_width=True)
 
 
 
