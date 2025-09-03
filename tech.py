@@ -64,7 +64,7 @@ def score_dataframe(df: pd.DataFrame, actual_skills_col="competencias_tecnicas",
 
     return average_levels, std_dev_levels, most_common_required
 
-def get_tech_skills_scores_figs(df):
+def get_tech_skills_scores_figs(df, filter_colors):
     """Toma un dataframe filtrado y hace un plot de las competencias tecnicas de cada candidato."""
     df_dropped = df.dropna(subset=["competencias_tecnicas", "competencias_tecnicas_necesarias"])
     average_levels, std_levels, required_levels = score_dataframe(df_dropped)
@@ -74,10 +74,10 @@ def get_tech_skills_scores_figs(df):
         
     colors = [get_color(average_levels[skill], required_levels[skill])
             for skill in required_levels]
-    
-    # st.write(average_levels, len(average_levels))
-    # st.write(std_levels, len(std_levels))
-    # st.write(required_levels, len(required_levels))
+
+    std_levels = [v for v, c in zip(std_levels.values(), colors) if c in filter_colors]
+
+    average_levels = {k : v for (k, v), c in zip(average_levels.items(), colors) if c in filter_colors}
 
     fig = go.Figure()
 
@@ -87,7 +87,7 @@ def get_tech_skills_scores_figs(df):
         # This is the key part for adding error bars
         error_y=dict(
             type='data',
-            array=list(std_levels.values()),
+            array=list(std_levels),
             visible=True,
             color='gray',  # Optional: style the error bars
             thickness=1.5

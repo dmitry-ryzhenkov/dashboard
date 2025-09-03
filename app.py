@@ -62,15 +62,14 @@ with tab1:
         st.warning("No hay datos para la selección actual.")
     else:
 
-        # color_filter = st.multiselect(label = "Filtro", options = ["Verde", "Azul", "Amarillo", "Rojo"])
-        # color_map = {"Rojo" : "#CD5C5C",
-        #              "Amarillo" : "#BDB76B",
-        #              "Verde" : "#8FBC8F",
-        #              "Azul" : "#6495ED"}
-
-        # color_filter = [color_map[color] for color in color_filter]
+        filter_colors = st.multiselect(label = "Filtro", options = ["Verde", "Azul", "Amarillo", "Rojo"], default = ["Verde", "Azul", "Amarillo", "Rojo"], key = 0)
+        map_color = {"Rojo" : "#CD5C5C",
+                    "Amarillo" : "#BDB76B",
+                    "Azul" : "#6495ED",
+                    "Verde" : "#8FBC8F"}
+        filter_colors = [map_color[color] for color in filter_colors]
         # Get the figures from your 'soft' module
-        fig1, fig2, fig3, fig4, fig5 = soft.get_soft_skills_scores_figs(df_filtered)
+        fig1, fig2, fig3, fig4, fig5 = soft.get_soft_skills_scores_figs(df_filtered, filter_colors)
 
         # Create a 2x2 grid layout using st.columns
         row1_col1, row1_col2 = st.columns(2)
@@ -93,14 +92,21 @@ with tab1:
 # --- Tab 2: Tech Skills Content ---
 with tab2:
     st.header("Análisis de Habilidades Técnicas")
+
+    filter_colors = st.multiselect(label = "Filtro", options = ["Verde", "Azul", "Amarillo", "Rojo"], default = ["Verde", "Azul", "Amarillo", "Rojo"])
+    map_color = {"Rojo" : "#CD5C5C",
+                 "Amarillo" : "#BDB76B",
+                 "Azul" : "#6495ED",
+                 "Verde" : "#8FBC8F"}
+    filter_colors = [map_color[color] for color in filter_colors]
     
     # Check if the filtered DataFrame is empty
     if df_filtered.empty:
         st.warning("No hay datos para la selección actual.")
     else:
         # Get the figures from your 'tech' and 'tech_' modules
-        tech_fig_1 = tech.get_tech_skills_scores_figs(df_filtered)
-        tech_fig_2 = tech_.get_tech_scores_figs(df_filtered)
+        tech_fig_1 = tech.get_tech_skills_scores_figs(df_filtered, filter_colors)
+        tech_fig_2 = tech_.get_tech_scores_figs(df_filtered, filter_colors)
 
         # Display the charts one after another
         st.plotly_chart(tech_fig_1, use_container_width=True)
