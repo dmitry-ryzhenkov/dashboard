@@ -91,26 +91,24 @@ def segunda_grafica(df_dicts):
 
     return fig
 
-    # Vertical y Veredicto
-    def grafica_veredicto_vertical(df_dicts):
-        df_vertical_veredicto = pd.merge(left = df_dicts["Trabajadores"].explode("Nueva vertical").groupby(by = ["Nueva vertical", "Veredicto"], as_index = False).agg({"id" : "count"}),
-                                        right = df_dicts["Verticales"][["id", "Vertical"]],
-                                        left_on = "Nueva vertical",
-                                        right_on = "id")[["Vertical", "Veredicto", "id_x"]]
-        
-        df_vertical_veredicto.columns = ["Vertical", "Veredicto", "count"]
-        
-        veredicto_orden = ["Cumple con el nivel y vertical asignado",
-                        "Cumple la vertical, pero no con el nivel asignado",
-                        "Excede el nivel de la vertical prevista",
-                        "Cumple con el nivel, pero no con la vertical asignada",
-                        "No cumple con nivel, ni vertical previsto"]
-        
-        df_vertical_veredicto["Veredicto"] = pd.Categorical(df_vertical_veredicto["Veredicto"], categories = veredicto_orden, ordered = True)
-        df_vertical_veredicto = df_vertical_veredicto.sort_values("Veredicto")
-        
-        fig = px.bar(data_frame = df_vertical_veredicto, x = "Vertical", y = "count", color = "Veredicto")
+# Vertical y Veredicto
+def grafica_veredicto_vertical(df_dicts):
+    df_vertical_veredicto = pd.merge(left = df_dicts["Trabajadores"].explode("Nueva vertical").groupby(by = ["Nueva vertical", "Veredicto"], as_index = False).agg({"id" : "count"}),
+                                    right = df_dicts["Verticales"][["id", "Vertical"]],
+                                    left_on = "Nueva vertical",
+                                    right_on = "id")[["Vertical", "Veredicto", "id_x"]]
+    
+    df_vertical_veredicto.columns = ["Vertical", "Veredicto", "count"]
+    
+    veredicto_orden = ["Cumple con el nivel y vertical asignado",
+                    "Cumple la vertical, pero no con el nivel asignado",
+                    "Excede el nivel de la vertical prevista",
+                    "Cumple con el nivel, pero no con la vertical asignada",
+                    "No cumple con nivel, ni vertical previsto"]
+    
+    df_vertical_veredicto["Veredicto"] = pd.Categorical(df_vertical_veredicto["Veredicto"], categories = veredicto_orden, ordered = True)
+    df_vertical_veredicto = df_vertical_veredicto.sort_values("Veredicto")
+    
+    fig = px.bar(data_frame = df_vertical_veredicto, x = "Vertical", y = "count", color = "Veredicto")
 
-        return fig
-
-    grafica_veredicto_vertical(df_dicts)
+    return fig
