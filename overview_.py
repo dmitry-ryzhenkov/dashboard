@@ -113,3 +113,23 @@ def grafica_veredicto_vertical(df_dicts):
     fig = px.bar(data_frame = df_vertical_veredicto, x = "Veredicto", y = "count", color = "Vertical")
 
     return fig
+
+# Rol y Veredicto
+def grafica_veredicto_rol(df_dicts):
+    df_rol_veredicto = pd.merge(left = df_dicts["Trabajadores"].explode("Nuevo puesto").groupby(by = ["Nuevo puesto", "Veredicto"], as_index = False).agg({"id" : "count"}),
+                                right = df_dicts["Roles"][["Nivel de carrera MAPFRE", "Puesto"]],
+                                left_on = "Nuevo puesto",
+                                right_on = "Puesto")[["Nivel de carrera MAPFRE", "Veredicto", "id"]]
+
+    df_rol_veredicto.columns = ["Rol", "Veredicto", "count"]
+
+    veredicto_orden = ["Cumple con el nivel y vertical asignado",
+                    "Cumple la vertical, pero no con el nivel asignado",
+                    "Excede el nivel de la vertical prevista",
+                    "Cumple con el nivel, pero no con la vertical asignada",
+                    "No cumple con nivel, ni vertical previsto"]
+
+    df_rol_veredicto["Veredicto"] = pd.Categorical(df_rol_veredicto["Veredicto"], categories = veredicto_orden, ordered = True)
+    df_rol_veredicto = df_rol_veredicto.sort_values("Veredicto")
+
+    return px.bar(data_frame = df_rol_veredicto, x = "Veredicto", y = "count", color = "Rol")
