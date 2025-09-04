@@ -86,31 +86,43 @@ def get_soft_skills_scores_figs(df, filter_colors):
 
         avg_lvls = {k : v for (k, v), c in zip(avg_lvls.items(), colors) if c in filter_colors}
 
+        map_color = {"#CD5C5C" : "Rojo",
+                    "#BDB76B" : "Amarillo",
+                    "#6495ED" : "Azul",
+                    "#8FBC8F" : "Verde"}
+        df_grafica = pd.DataFrame()
+        df_grafica["skill"] = avg_lvls.keys()
+        df_grafica["avg"] = np.round(list(avg_lvls.values()), 2)
+        df_grafica["std"] = std_lvls
+        df_grafica["color"] = colors
+        df_grafica["inv_color"] = df_grafica["color"].apply(lambda x : map_color[x])
+
         fig = go.Figure()
 
-        fig.add_trace(go.Bar(
-            x=list(avg_lvls.keys()),
-            y=list(avg_lvls.values()),
-            # This is the key part for adding error bars
-            error_y=dict(
-                type='data',
-                array=list(std_lvls),
-                visible=True,
-                color='gray',  # Optional: style the error bars
-                thickness=1.5
-            ),
-            # Use marker_color to pass your custom color list
-            marker_color=colors
-        ))
-        
-        # Update layout properties
+        fig = px.bar(
+        df_grafica,
+        x="skill",
+        y="avg",
+        color="inv_color",
+        error_y="std",
+        text="avg",
+        color_discrete_map={
+                       "Rojo" : "#CD5C5C",
+                 "Amarillo" : "#BDB76B",
+                 "Azul" : "#6495ED",
+                 "Verde" : "#8FBC8F"
+    }
+)
+        fig.update_traces(textposition="inside", insidetextanchor = "start")
+                # Update layout properties
         fig.update_layout(
-            title_text=f"{area} (n={df_dropped.shape[0]})",
-            yaxis_title='Nivel Promedio: Muy bajo (0) - Muy alto (4)',
-            yaxis_range=[0, 6],
-            showlegend=False # Hide legend as colors are informational
-        )
-        
+                title_text=f"{area} (n={df_dropped.shape[0]})",
+                yaxis_title='Nivel Promedio: Muy bajo (0) - Muy alto (4)',
+                yaxis_range=[0, 6],
+                legend_title_text = "",
+                showlegend=True # Hide legend as colors are informational
+            )
+            
         figs.append(fig)
 
     return figs

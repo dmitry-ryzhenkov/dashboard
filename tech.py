@@ -6,7 +6,8 @@ import pandas as pd
 import plotly.graph_objects as go
 
 from utils import get_color
-import streamlit as st
+# import streamlit as st
+import plotly.express as px
 
 def extract_comp_data(comp: str) -> tuple[str, int]:
     """Extrae información de las competencias blandas. Retorna la competencia en cuestion y el nivel en formato tupla."""
@@ -79,29 +80,63 @@ def get_tech_skills_scores_figs(df, filter_colors):
 
     average_levels = {k : v for (k, v), c in zip(average_levels.items(), colors) if c in filter_colors}
 
-    fig = go.Figure()
+    map_color = {"#CD5C5C" : "Rojo",
+                 "#BDB76B" : "Amarillo",
+                 "#6495ED" : "Azul",
+                 "#8FBC8F" : "Verde"}
+    df_grafica = pd.DataFrame()
+    df_grafica["skill"] = average_levels.keys()
+    df_grafica["avg"] = np.round(list(average_levels.values()), 2)
+    df_grafica["std"] = std_levels
+    df_grafica["color"] = colors
+    df_grafica["inv_color"] = df_grafica["color"].apply(lambda x : map_color[x])
 
-    fig.add_trace(go.Bar(
-        x=list(average_levels.keys()),
-        y=list(average_levels.values()),
-        # This is the key part for adding error bars
-        error_y=dict(
-            type='data',
-            array=list(std_levels),
-            visible=True,
-            color='gray',  # Optional: style the error bars
-            thickness=1.5
-        ),
-        # Use marker_color to pass your custom color list
-        marker_color=colors
-    ))
-    
-    # Update layout properties
+    # st.write(df_grafica)
+
+
+
+    # fig = go.Figure()
+
+    # fig.add_trace(go.Bar(
+    #     x=df_grafica["skill"],
+    #     y=df_grafica["avg"],
+    #     color = df_grafica["inv_color"],
+    #     error_y=dict(
+    #         type="data",
+    #         array=df_grafica["std"],
+    #         visible=True,
+    #         color="gray",
+    #         thickness=1.5
+    #     ),
+    #     marker_color=df_grafica["color"],
+    #     text=df_grafica["avg"].round(2),   # etiquetas con el valor redondeado
+    #     textposition="outside"
+    # ))
+
+    fig = px.bar(
+        df_grafica,
+        x="skill",
+        y="avg",
+        color="inv_color",
+        error_y="std",
+        text="avg",
+        color_discrete_map={
+                       "Rojo" : "#CD5C5C",
+                 "Amarillo" : "#BDB76B",
+                 "Azul" : "#6495ED",
+                 "Verde" : "#8FBC8F"
+    }
+)
+    fig.update_traces(textposition="inside", insidetextanchor = "start")
+
+
     fig.update_layout(
-        title_text=f"Competencias Técnicas (n={df_dropped.shape[0]})",
-        yaxis_title='Nivel Promedio: Muy bajo (0) - Muy alto (4)',
-        yaxis_range=[0, 6],
-        showlegend=False # Hide legend as colors are informational
-    )
+    title_text=f"Competencias Técnicas (n={df_dropped.shape[0]})",
+    yaxis_title="Nivel Promedio: Muy bajo (0) - Muy alto (4)",
+    yaxis_range=[0, 6],
+    legend_title_text = "",
+    showlegend=True
+)
+
         
     return fig
