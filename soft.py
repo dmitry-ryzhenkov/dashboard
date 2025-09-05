@@ -5,6 +5,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 from utils import get_color
+# import streamlit as st
 
 def extract_comp_data(comp: str) -> tuple[str, int]:
     """Extrae información de las competencias blandas. Retorna la competencia en cuestion y el nivel en formato tupla."""
@@ -82,6 +83,8 @@ def get_soft_skills_scores_figs(df, filter_colors):
         colors = [get_color(avg_lvls[skill], req_lvls[skill])
                 for skill in req_lvls]
         
+        colors = [c for c in colors if c in filter_colors]
+        
         std_lvls = [v for v, c in zip(std_lvls.values(), colors) if c in filter_colors]
 
         avg_lvls = {k : v for (k, v), c in zip(avg_lvls.items(), colors) if c in filter_colors}
@@ -90,6 +93,7 @@ def get_soft_skills_scores_figs(df, filter_colors):
                  "#BDB76B" : "Ligeramente por debajo del nivel",
                  "#6495ED" : "Sobrepasa el nivel",
                  "#8FBC8F" : "Cumple con el nivel"}
+        
         df_grafica = pd.DataFrame()
         df_grafica["skill"] = avg_lvls.keys()
         df_grafica["avg"] = np.round(list(avg_lvls.values()), 2)

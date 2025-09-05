@@ -75,6 +75,8 @@ def get_tech_skills_scores_figs(df, filter_colors):
         
     colors = [get_color(average_levels[skill], required_levels[skill])
             for skill in required_levels]
+    
+    colors = [c for c in colors if c in filter_colors]
 
     std_levels = [v for v, c in zip(std_levels.values(), colors) if c in filter_colors]
 
