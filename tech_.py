@@ -74,11 +74,11 @@ def get_tech_scores_figs(df, filter_colors):
         
     colors = [get_color(average_levels[skill], required_levels[skill])
             for skill in required_levels]
-    colors = [c for c in colors if c in filter_colors]
+    # colors = [c for c in colors if c in filter_colors]
     
-    std_levels = [v for v, c in zip(std_levels.values(), colors) if c in filter_colors]
+    std_levels = [v for v in std_levels.values()]
 
-    average_levels = {k : v for (k, v), c in zip(average_levels.items(), colors) if c in filter_colors}
+    average_levels = {k : v for k, v in average_levels.items()}
 
     map_color = {"#CD5C5C" : "Muy por debajo del nivel",
                  "#BDB76B" : "Ligeramente por debajo del nivel",
@@ -91,6 +91,8 @@ def get_tech_scores_figs(df, filter_colors):
     df_grafica["color"] = colors
     df_grafica["inv_color"] = df_grafica["color"].apply(lambda x : map_color[x])
 
+    df_grafica = df_grafica[df_grafica["color"].isin(filter_colors)]
+
     fig = px.bar(
         df_grafica,
         x="skill",
@@ -99,10 +101,10 @@ def get_tech_scores_figs(df, filter_colors):
         error_y="std",
         text="avg",
         color_discrete_map={
-                       "Rojo" : "#CD5C5C",
-                 "Amarillo" : "#BDB76B",
-                 "Azul" : "#6495ED",
-                 "Verde" : "#8FBC8F"
+                       "Muy por debajo del nivel" : "#CD5C5C",
+                 "Ligeramente por debajo del nivel" : "#BDB76B",
+                 "Sobrepasa el nivel" : "#6495ED",
+                 "Cumple con el nivel" : "#8FBC8F"
     }
 )
     fig.update_traces(textposition="inside", insidetextanchor = "start")

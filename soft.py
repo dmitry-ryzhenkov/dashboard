@@ -5,7 +5,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 from utils import get_color
-# import streamlit as st
+import streamlit as st
 
 def extract_comp_data(comp: str) -> tuple[str, int]:
     """Extrae información de las competencias blandas. Retorna la competencia en cuestion y el nivel en formato tupla."""
@@ -79,15 +79,19 @@ def get_soft_skills_scores_figs(df, filter_colors):
         req_lvls = {k.replace(area, "").strip() : v for k, v in required_levels.items() if area in k}
         avg_lvls = {k.replace(area, "").strip() : v for k, v in average_levels.items() if area in k}
         std_lvls = {k.replace(area, "").strip(): v for k, v in std_dev_levels.items() if area in k}
+
+        if len(avg_lvls) != len(std_lvls):
+            if len(avg_lvls) < len(std_lvls):
+                std_lvls = {k : v for k, v in std_lvls.items() if k in avg_lvls.keys()}
+            else:
+                avg_lvls = {k : v for k, v in avg_lvls.items() if k in std_lvls.keys()}
         
         colors = [get_color(avg_lvls[skill], req_lvls[skill])
                 for skill in req_lvls]
         
-        colors = [c for c in colors if c in filter_colors]
-        
-        std_lvls = [v for v, c in zip(std_lvls.values(), colors) if c in filter_colors]
+        std_lvls = [v for v in std_lvls.values()]
 
-        avg_lvls = {k : v for (k, v), c in zip(avg_lvls.items(), colors) if c in filter_colors}
+        avg_lvls = {k : v for k, v in avg_lvls.items()}
 
         map_color = {"#CD5C5C" : "Muy por debajo del nivel",
                  "#BDB76B" : "Ligeramente por debajo del nivel",
@@ -101,6 +105,8 @@ def get_soft_skills_scores_figs(df, filter_colors):
         df_grafica["color"] = colors
         df_grafica["inv_color"] = df_grafica["color"].apply(lambda x : map_color[x])
 
+        df_grafica = df_grafica[df_grafica["color"].isin(filter_colors)]
+
         fig = go.Figure()
 
         fig = px.bar(
@@ -111,10 +117,10 @@ def get_soft_skills_scores_figs(df, filter_colors):
         error_y="std",
         text="avg",
         color_discrete_map={
-                       "Rojo" : "#CD5C5C",
-                 "Amarillo" : "#BDB76B",
-                 "Azul" : "#6495ED",
-                 "Verde" : "#8FBC8F"
+                       "Muy por debajo del nivel" : "#CD5C5C",
+                 "Ligeramente por debajo del nivel" : "#BDB76B",
+                 "Sobrepasa el nivel" : "#6495ED",
+                 "Cumple con el nivel" : "#8FBC8F"
     }
 )
         fig.update_traces(textposition="inside", insidetextanchor = "start")
