@@ -69,9 +69,12 @@ def load_data() -> pd.DataFrame:
         "fields.Tecnologías (from Rol que le corresponde)", "fields.Tecnologías actuales Selección IT",
         "fields.Competencias técnicas (from Rol que le corresponde)", "fields.Competencias técnicas Selección IT",
         "fields.Competencia blanda (from Rol que le corresponde)", "fields.Competencias blandas Selección IT",
-        "fields.Puntaje Negocio (from Pruebas técnicas)"
+        "fields.Puntaje Negocio (from Pruebas técnicas)",
+        "fields.Edad", 
+        # "fields.Antigüedad",
+        "fields.Sexo",
         ]]
-
+    
     df.columns = df.columns.str.lower().str.replace("fields.", "")
 
     rename = {
@@ -83,12 +86,14 @@ def load_data() -> pd.DataFrame:
         "competencias técnicas selección it" : "competencias_tecnicas",
         "competencia blanda (from rol que le corresponde)" : "competencias_blandas_necesarias",
         "competencias blandas selección it" : "competencias_blandas",
-        "puntaje negocio (from pruebas técnicas)" : "prueba_negocio"
+        "puntaje negocio (from pruebas técnicas)" : "prueba_negocio",
+        "Sexo" : "sexo",
+        "Edad" : "edad",
+        # "Antigüedad" : "antiguedad"
     }
-
+    
     df = df.rename(columns=rename)
     df.columns = df.columns.str.replace(" ", "_")
-
     # -------------------------------------
 
     df.loc[: ,["rol", "rol_que_le_corresponde", "nueva_vertical", "prueba_tecnica", "prueba_negocio"]] = df[["rol", "rol_que_le_corresponde", "nueva_vertical", "prueba_tecnica", "prueba_negocio"]].map(lambda x: x[0] if isinstance(x, list) else np.nan)
@@ -115,6 +120,7 @@ def load_data() -> pd.DataFrame:
 
     df = replace_ids_with_names(df, df_comp_blandas, "id", "fields.Nombre", "competencias_blandas_necesarias")
     df = replace_ids_with_names(df, df_comp_blandas, "id", "fields.Nombre", "competencias_blandas")
+
     return df
 
 # -------------------------------------

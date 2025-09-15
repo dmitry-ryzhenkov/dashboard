@@ -1,10 +1,11 @@
 import numpy as np
 import pandas as pd
 import plotly.express as px
+import streamlit as st
 
-def primera_grafica(df_dicts):
-    
-    df = df_dicts["Trabajadores"][["Nombre", "Certificaciones", "Certificaciones (from Rol que le corresponde)", "Certificaciones faltantes para el rol (INFORME)", "Nueva vertical"]]
+def primera_grafica(df_filtered, df_dicts):
+
+    df = df_dicts["Trabajadores"][["id", "Nombre", "Certificaciones", "Certificaciones (from Rol que le corresponde)", "Certificaciones faltantes para el rol (INFORME)", "Nueva vertical"]]
     
     for col in df.columns:
     
@@ -19,6 +20,8 @@ def primera_grafica(df_dicts):
     df["Porcentaje Certificaciones Faltantes"] = np.round(df["Certificaciones Faltantes"] / df["Certificaciones Totales por Rol"] * 100, 2)
     
     df = pd.merge(left = df.explode("Nueva vertical"), right = df_dicts["Verticales"][["id", "Vertical"]], left_on = "Nueva vertical", right_on = "id", how = "left")
+
+    df = pd.merge(left = df_filtered, right = df, left_on = "id", right_on = "id_x", how = "left")
     
     df_resultado = df.groupby(by = ["Vertical"], as_index = False).agg({"Porcentaje Certificaciones Faltantes" : "mean"})
     
@@ -41,11 +44,13 @@ def primera_grafica(df_dicts):
     
     return fig
 
-def segunda_grafica(df_dicts):
-    df = pd.merge(left = df_dicts["Trabajadores"].explode("Nivel").drop("id", axis = 1),
+def segunda_grafica(df_filtered, df_dicts):
+    df = pd.merge(left = df_dicts["Trabajadores"].explode("Nivel"),
               right = df_dicts["Roles"][["id", "Nivel de carrera MAPFRE"]],
               left_on = "Nivel",
               right_on = "id")
+    
+    df = pd.merge(left = df_filtered, right = df, left_on = "id", right_on = "id_x", how = "left")
 
     df = df[["Certificaciones", "Certificaciones (from Rol que le corresponde)", "Certificaciones faltantes para el rol (INFORME)", "Nivel de carrera MAPFRE"]]
 
@@ -92,9 +97,11 @@ def segunda_grafica(df_dicts):
     return fig
 
 # Vertical y Veredicto
-def grafica_veredicto_vertical(df_dicts):
+def grafica_veredicto_vertical(df_filtered, df_dicts):
 
-    df_vertical_veredicto = pd.merge(left = df_dicts["Trabajadores"].explode("Nueva vertical").groupby(by = ["Nueva vertical", "Veredicto"], as_index = False).agg({"id" : "count"}),
+    df_func = pd.merge(left = df_filtered, right = df_dicts["Trabajadores"].explode("Nueva vertical"), left_on = "id", right_on = "id", how = "left")
+
+    df_vertical_veredicto = pd.merge(left = df_func.groupby(by = ["Nueva vertical", "Veredicto"], as_index = False).agg({"id" : "count"}),
                                     right = df_dicts["Verticales"][["id", "Vertical"]],
                                     left_on = "Nueva vertical",
                                     right_on = "id")[["Vertical", "Veredicto", "id_x"]]
@@ -115,9 +122,11 @@ def grafica_veredicto_vertical(df_dicts):
     return fig
 
 # Rol y Veredicto
-def grafica_veredicto_rol(df_dicts):
+def grafica_veredicto_rol(df_filtered, df_dicts):
+
+    df_func = pd.merge(left = df_filtered, right = df_dicts["Trabajadores"].explode("Nuevo puesto"), left_on = "id", right_on = "id", how = "left")
     
-    df_rol_veredicto = pd.merge(left = df_dicts["Trabajadores"].explode("Nuevo puesto").groupby(by = ["Nuevo puesto", "Veredicto"], as_index = False).agg({"id" : "count"}),
+    df_rol_veredicto = pd.merge(left = df_func.groupby(by = ["Nuevo puesto", "Veredicto"], as_index = False).agg({"id" : "count"}),
                                 right = df_dicts["Roles"][["Nivel de carrera MAPFRE", "Puesto"]],
                                 left_on = "Nuevo puesto",
                                 right_on = "Puesto")[["Nivel de carrera MAPFRE", "Veredicto", "id"]]

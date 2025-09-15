@@ -14,18 +14,27 @@ def replace_ids_with_names(df1, df2, id_col, name_col, list_col):
 
     return df1
 
-def filtrar(df: pd.DataFrame, vertical: str, rol: str) -> pd.DataFrame:
-    """Devuelve únicamente a las personas con la vertical y rol seleccionados"""
-    if vertical == "TODOS" and rol == "TODOS":
-        return df
+def filtrar(df: pd.DataFrame, dict_filtros) -> pd.DataFrame:
 
-    if rol == "TODOS":
-        return df[df["nueva_vertical"] == vertical]
+    """Devuelve únicamente a las personas con la vertical y rol seleccionados"""
+
+    if dict_filtros["Vertical"] != "TODOS":
+        df = df[df["nueva_vertical"] == dict_filtros["Vertical"]]
     
-    if vertical == "TODOS":
-        return df[df["rol"] == rol]
-    
-    return df[(df["rol"] == rol) & (df["nueva_vertical"] == vertical)]
+    if dict_filtros["Rol"] != "TODOS":
+        df = df[df["rol"] == dict_filtros["Vertical"]]
+
+    if dict_filtros["Sexo"] != "AMBOS":
+        df = df[df["sexo"] == dict_filtros["Sexo"]]
+
+    if dict_filtros["Nivel Carrera"] != "TODOS":
+        df = df[df["Nivel Carrera"] == dict_filtros["Nivel Carrera"]]
+
+    if dict_filtros["Min Edad"] != 0 and dict_filtros["Max Edad"] != 0:
+        df = df[df["edad"].between(dict_filtros["Min Edad"], dict_filtros["Max Edad"])]
+    # df = df[df["Antiguedad"] == dict_filtros["Antiguedad"]]
+
+    return df
 
 def get_color(actual_level, required_level):
     """Función auxiliar que determina el color de la barra de un barplot."""

@@ -8,6 +8,8 @@ import soft
 import tech
 import tech_
 import overview_
+import pruebas_tecnicas
+import pandas as pd
 
 # ---------------------------------------------------------------------------------------------
 # Page Configuration and Data Loading
@@ -23,6 +25,12 @@ def cached_load_data():
 
 df = cached_load_data()
 
+@st.cache_data
+def cached_extract_all_data():
+    return extract_all_airtable(tables_id = tables_id)
+
+df_dicts = cached_extract_all_data()
+
 # ---------------------------------------------------------------------------------------------
 # Main App Layout
 # ---------------------------------------------------------------------------------------------
@@ -32,25 +40,70 @@ st.title("Dashboard de Habilidades")
 # Define options for the selectors
 vertical_options = list(df["nueva_vertical"].unique()) + ["TODOS"]
 rol_options = list(df["rol"].unique()) + ["TODOS"]
+sexo_options = list(df["sexo"].unique()) + ["AMBOS"]
+niveL_carrera_options = ["TODOS"]
 
+dict_filtros = {"Vertical"      : vertical_options[-1],
+                "Rol"           : rol_options[-1],
+                "Antiguedad"    : 3,
+                "Nivel Carrera" : niveL_carrera_options[-1],
+                "Min Edad"      : 30,
+                "Max Edad"      : 35,
+                "Sexo"          : sexo_options[-1]}
 
-selected_vertical = st.sidebar.selectbox(
-    label="Seleccionar Vertical",
-    options=vertical_options,
-)
+with st.sidebar.form(key = "Filtros"):
 
-selected_rol = st.sidebar.selectbox(
-    label="Seleccionar Rol",
-    options=rol_options
-)
+    selected_vertical = st.selectbox(label  = "Vertical",
+                                    options = vertical_options,
+                                    index = len(vertical_options) - 1)
+    
+    selected_rol = st.selectbox(label   = "Rol",
+                                options = rol_options,
+                                index = len(rol_options) - 1)
+    
+    selected_antiguedad = st.number_input(label     = "Antiguedad",
+                                          min_value = 0,
+                                          max_value = 50,
+                                          value     = 3,
+                                          step      = 1)
+    
+    selected_nivel_carrera = st.selectbox(label   = "Nivel Carrera",
+                                          options = niveL_carrera_options)
+    
+    selected_min_age = st.number_input(label     = "Min Edad",
+                                       min_value = 0,
+                                       max_value = 99,
+                                       value     = 30,
+                                       step      = 1)
+    selected_max_age = st.number_input(label     = "Max Edad",
+                                       min_value = 0,
+                                       max_value = 99,
+                                       value     = 35,
+                                       step      = 1)
+    
+    selected_sex = st.selectbox(label   = "Sexo",
+                                options = sexo_options,
+                                index = len(sexo_options) - 1)
 
+    submitted = st.form_submit_button(label = "Aplicar")
+    if submitted:
+        dict_filtros = {"Vertical"      : selected_vertical,
+                        "Rol"           : selected_rol,
+                        "Antiguedad"    : selected_antiguedad,
+                        "Nivel Carrera" : selected_nivel_carrera,
+                        "Min Edad"      : selected_min_age,
+                        "Max Edad"      : selected_max_age,
+                        "Sexo"          : selected_sex}
+    
+    
 # --- Data Filtering ---
 # Filter the data based on selections. This happens every time a widget is changed.
-df_filtered = filtrar(df, selected_vertical, selected_rol)
+df_filtered = filtrar(df = df, dict_filtros = dict_filtros)
 
 # --- Tabs ---
 # Streamlit's st.tabs is a direct replacement for dcc.Tabs
-tab1, tab2, tab3 = st.tabs(["Soft Skills", "Tech Skills", "Overview"], width="stretch")
+tab1, tab2, tab3, tab4 = st.tabs(tabs = ["Soft Skills", "Tech Skills", "Overview", "Tech Test"],
+                                 width = "stretch")
 
 
 # --- Tab 1: Soft Skills Content ---
@@ -63,14 +116,16 @@ with tab1:
     else:
 
         filter_colors = st.multiselect(label = "Filtro", key = 123,
-                                    options = ["Cumple con el nivel", "Sobrepasa el nivel", "Ligeramente por debajo del nivel", "Muy por debajo del nivel"],
-                                    default = ["Cumple con el nivel", "Sobrepasa el nivel", "Ligeramente por debajo del nivel", "Muy por debajo del nivel"])
+                                       options = ["Cumple con el nivel", "Sobrepasa el nivel", "Ligeramente por debajo del nivel", "Muy por debajo del nivel"],
+                                       default = ["Cumple con el nivel", "Sobrepasa el nivel", "Ligeramente por debajo del nivel", "Muy por debajo del nivel"])
         
-        map_color = {"Muy por debajo del nivel" : "#CD5C5C",
-                    "Ligeramente por debajo del nivel" : "#BDB76B",
-                    "Sobrepasa el nivel" : "#6495ED",
-                    "Cumple con el nivel" : "#8FBC8F"}
+        map_color = {"Muy por debajo del nivel"         : "#CD5C5C",
+                     "Ligeramente por debajo del nivel" : "#BDB76B",
+                     "Sobrepasa el nivel"               : "#6495ED",
+                     "Cumple con el nivel"              : "#8FBC8F"}
+        
         filter_colors = [map_color[color] for color in filter_colors]
+
         # Get the figures from your 'soft' module
         fig1, fig2, fig3, fig4, fig5 = soft.get_soft_skills_scores_figs(df_filtered, filter_colors)
 
@@ -96,8 +151,6 @@ with tab1:
 with tab2:
     st.header("Análisis de Habilidades Técnicas")
 
-
-
     map_color = {"#CD5C5C" : "Muy por debajo del nivel",
                  "#BDB76B" : "Ligeramente por debajo del nivel",
                  "#6495ED" : "Sobrepasa el nivel",
@@ -114,6 +167,8 @@ with tab2:
                  "Cumple con el nivel" : "#8FBC8F"}
     
     filter_colors = [map_color[color] for color in filter_colors]
+
+
     
     # Check if the filtered DataFrame is empty
     if df_filtered.empty:
@@ -135,12 +190,11 @@ with tab3:
     if df_filtered.empty:
         st.warning("No hay datos para la selección actual.")
     else:
-        df_dicts = extract_all_airtable(tables_id = tables_id)
         # Get the figures from your 'tech' and 'tech_' modules
-        overview_fig_1 = overview_.primera_grafica(df_dicts = df_dicts)
-        overview_fig_2 = overview_.segunda_grafica(df_dicts = df_dicts)
-        overview_fig_3 = overview_.grafica_veredicto_vertical(df_dicts = df_dicts)
-        overview_fig_4 = overview_.grafica_veredicto_rol(df_dicts = df_dicts)
+        overview_fig_1 = overview_.primera_grafica(df_filtered = df_filtered, df_dicts = df_dicts)
+        overview_fig_2 = overview_.segunda_grafica(df_filtered = df_filtered, df_dicts = df_dicts)
+        overview_fig_3 = overview_.grafica_veredicto_vertical(df_filtered = df_filtered, df_dicts = df_dicts)
+        overview_fig_4 = overview_.grafica_veredicto_rol(df_filtered = df_filtered, df_dicts = df_dicts)
 
         # Display the charts one after another
         st.plotly_chart(overview_fig_1, use_container_width=True)
@@ -149,4 +203,22 @@ with tab3:
         st.plotly_chart(overview_fig_4, use_container_width=True)
 
 
+with tab4:
+    st.header("Pruebas Técnicas")
+    # Check if the filtered DataFrame is empty
+    if df_filtered.empty:
+        st.warning("No hay datos para la selección actual.")
+    else:
+        
+        prueba_tecnica_fig_1 = pruebas_tecnicas.primera_grafica(df_filtered = df_filtered, df_dicts = df_dicts)
+        # Get the figures from your 'tech' and 'tech_' modules
+        # overview_fig_1 = overview_.primera_grafica(df_dicts = df_dicts)
+        # overview_fig_2 = overview_.segunda_grafica(df_dicts = df_dicts)
+        # overview_fig_3 = overview_.grafica_veredicto_vertical(df_dicts = df_dicts)
+        # overview_fig_4 = overview_.grafica_veredicto_rol(df_dicts = df_dicts)
 
+        # # Display the charts one after another
+        st.plotly_chart(prueba_tecnica_fig_1, use_container_width=True)
+        # st.plotly_chart(overview_fig_2, use_container_width=True)
+        # st.plotly_chart(overview_fig_3, use_container_width=True)
+        # st.plotly_chart(overview_fig_4, use_container_width=True)
