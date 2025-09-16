@@ -144,3 +144,25 @@ def get_tech_skills_scores_figs(df, filter_colors):
 
         
     return fig
+
+def quinta_grafica(df_filtered, df_dicts):
+    
+    df1 = pd.merge(left = df_filtered, right = df_dicts["Trabajadores"], left_on = "id", right_on = "id", how = "left")
+
+    df2 = df_dicts["Data Tecnologías"].explode("Trabajadores")
+
+    df3 = df_dicts["Pruebas técnicas"].explode("Trabajador/a")
+
+    df_puntaje_tecnico = pd.merge(left = df1, right = df2, left_on = "id", right_on = "Trabajadores", how = "left")
+    df_puntaje_tecnico = pd.merge(left = df_puntaje_tecnico, right = df3, left_on = "id_x", right_on = "Trabajador/a", how = "left") 
+    df_puntaje_tecnico = df_puntaje_tecnico.groupby(by = "Conocimiento técnico asegurador", as_index = False).agg({"Puntaje Negocio" : ["mean"]})
+
+
+    df_puntaje_tecnico.columns = [x[0] if x[1] == "" else "_".join(x) for x in df_puntaje_tecnico.columns]
+    df_puntaje_tecnico["Conocimiento técnico asegurador"] = df_puntaje_tecnico["Conocimiento técnico asegurador"].astype("str")
+    fig = px.bar(data_frame = df_puntaje_tecnico,
+                 x          = "Conocimiento técnico asegurador",
+                 y          = "Puntaje Negocio_mean",
+                 color      = "Conocimiento técnico asegurador")
+
+    return fig

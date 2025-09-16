@@ -43,13 +43,14 @@ rol_options = list(df["rol"].unique()) + ["TODOS"]
 sexo_options = ["M", "V"] + ["AMBOS"]
 niveL_carrera_options = ["TODOS"]
 
-dict_filtros = {"Vertical"      : vertical_options[-1],
-                "Rol"           : rol_options[-1],
-                "Antiguedad"    : 3,
-                "Nivel Carrera" : niveL_carrera_options[-1],
-                "Min Edad"      : 30,
-                "Max Edad"      : 35,
-                "Sexo"          : sexo_options[-1]}
+dict_filtros = {"Vertical"       : vertical_options[-1],
+                "Rol"            : rol_options[-1],
+                "Min Antiguedad" : 0,
+                "MAx Antiguedad" : 0,
+                "Nivel Carrera"  : niveL_carrera_options[-1],
+                "Min Edad"       : 0,
+                "Max Edad"       : 0,
+                "Sexo"           : sexo_options[-1]}
 
 with st.sidebar.form(key = "Filtros"):
 
@@ -61,11 +62,17 @@ with st.sidebar.form(key = "Filtros"):
                                 options = rol_options,
                                 index = len(rol_options) - 1)
     
-    selected_antiguedad = st.number_input(label     = "Antiguedad",
-                                          min_value = 0,
-                                          max_value = 50,
-                                          value     = 3,
-                                          step      = 1)
+    selected_min_antiguedad = st.number_input(label     = "Min Antiguedad",
+                                              min_value = 0,
+                                              max_value = 50,
+                                              value     = 0,
+                                              step      = 1)
+    
+    selected_max_antiguedad = st.number_input(label     = "Max Antiguedad",
+                                              min_value = 0,
+                                              max_value = 50,
+                                              value     = 0,
+                                              step      = 1)
     
     selected_nivel_carrera = st.selectbox(label   = "Nivel Carrera",
                                           options = niveL_carrera_options)
@@ -73,12 +80,12 @@ with st.sidebar.form(key = "Filtros"):
     selected_min_age = st.number_input(label     = "Min Edad",
                                        min_value = 0,
                                        max_value = 99,
-                                       value     = 30,
+                                       value     = 0,
                                        step      = 1)
     selected_max_age = st.number_input(label     = "Max Edad",
                                        min_value = 0,
                                        max_value = 99,
-                                       value     = 35,
+                                       value     = 0,
                                        step      = 1)
     
     selected_sex = st.selectbox(label   = "Sexo",
@@ -87,13 +94,14 @@ with st.sidebar.form(key = "Filtros"):
 
     submitted = st.form_submit_button(label = "Aplicar")
     if submitted:
-        dict_filtros = {"Vertical"      : selected_vertical,
-                        "Rol"           : selected_rol,
-                        "Antiguedad"    : selected_antiguedad,
-                        "Nivel Carrera" : selected_nivel_carrera,
-                        "Min Edad"      : selected_min_age,
-                        "Max Edad"      : selected_max_age,
-                        "Sexo"          : selected_sex}
+        dict_filtros = {"Vertical"       : selected_vertical,
+                        "Rol"            : selected_rol,
+                        "Min Antiguedad" : selected_min_antiguedad,
+                        "Max Antiguedad" : selected_max_antiguedad,
+                        "Nivel Carrera"  : selected_nivel_carrera,
+                        "Min Edad"       : selected_min_age,
+                        "Max Edad"       : selected_max_age,
+                        "Sexo"           : selected_sex}
     
     
 # --- Data Filtering ---
@@ -143,6 +151,9 @@ with tab1:
             st.plotly_chart(fig4, use_container_width=True)
 
         st.plotly_chart(fig5, use_container_width=True)
+        # st.write(df_filtered)
+        # fig6 = soft.get_soft_scores_figs(df = df, filter_colors = filter_colors)
+        # st.plotly_chart(fig6, use_container_width=True)
 
         
 
@@ -177,10 +188,12 @@ with tab2:
         # Get the figures from your 'tech' and 'tech_' modules
         tech_fig_1 = tech.get_tech_skills_scores_figs(df_filtered, filter_colors)
         tech_fig_2 = tech_.get_tech_scores_figs(df_filtered, filter_colors)
+        tech_fig_3 = tech.quinta_grafica(df_filtered = df_filtered, df_dicts = df_dicts)
 
         # Display the charts one after another
         st.plotly_chart(tech_fig_1, use_container_width=True)
         st.plotly_chart(tech_fig_2, use_container_width=True)
+        st.plotly_chart(tech_fig_3, use_container_width=True)
 
 # --- Tab 3: Overwiev Content ---
 with tab3:
@@ -202,7 +215,7 @@ with tab3:
         st.plotly_chart(overview_fig_3, use_container_width=True)
         st.plotly_chart(overview_fig_4, use_container_width=True)
 
-
+# --- Tab 4: Tech test Content ---
 with tab4:
     st.header("Pruebas Técnicas")
     # Check if the filtered DataFrame is empty
@@ -211,6 +224,7 @@ with tab4:
     else:
         
         prueba_tecnica_fig_1 = pruebas_tecnicas.primera_grafica(df_filtered = df_filtered, df_dicts = df_dicts)
+        prueba_tecnica_fig_2 = pruebas_tecnicas.segunda_grafica(df_filtered = df_filtered, df_dicts = df_dicts)
         # Get the figures from your 'tech' and 'tech_' modules
         # overview_fig_1 = overview_.primera_grafica(df_dicts = df_dicts)
         # overview_fig_2 = overview_.segunda_grafica(df_dicts = df_dicts)
@@ -219,6 +233,6 @@ with tab4:
 
         # # Display the charts one after another
         st.plotly_chart(prueba_tecnica_fig_1, use_container_width=True)
-        # st.plotly_chart(overview_fig_2, use_container_width=True)
+        st.plotly_chart(prueba_tecnica_fig_2, use_container_width=True)
         # st.plotly_chart(overview_fig_3, use_container_width=True)
         # st.plotly_chart(overview_fig_4, use_container_width=True)

@@ -136,3 +136,59 @@ def get_soft_skills_scores_figs(df, filter_colors):
         figs.append(fig)
 
     return figs
+
+def get_soft_scores_figs(df, filter_colors):
+    """Toma un dataframe filtrado y hace un plot de las competencias tecnicas de cada candidato."""
+    df_dropped = df.dropna(subset=["competencias_tecnicas", "competencias_tecnicas_necesarias"])
+    average_levels, std_levels, required_levels = score_dataframe(df_dropped)
+
+    average_levels = {k: average_levels[k] if k in average_levels.keys() else 0 for k in required_levels.keys()}
+    std_levels = {k: std_levels[k] if k in std_levels.keys() else 0 for k in required_levels.keys()}
+        
+    colors = [get_color(average_levels[skill], required_levels[skill])
+            for skill in required_levels]
+    # colors = [c for c in colors if c in filter_colors]
+    
+    std_levels = [v for v in std_levels.values()]
+
+    average_levels = {k : v for k, v in average_levels.items()}
+
+    map_color = {"#CD5C5C" : "Muy por debajo del nivel",
+                 "#BDB76B" : "Ligeramente por debajo del nivel",
+                 "#6495ED" : "Sobrepasa el nivel",
+                 "#8FBC8F" : "Cumple con el nivel"}
+    df_grafica = pd.DataFrame()
+    df_grafica["skill"] = average_levels.keys()
+    df_grafica["avg"] = np.round(list(average_levels.values()), 2)
+    df_grafica["std"] = std_levels
+    df_grafica["color"] = colors
+    df_grafica["inv_color"] = df_grafica["color"].apply(lambda x : map_color[x])
+
+    df_grafica = df_grafica[df_grafica["color"].isin(filter_colors)]
+
+    fig = px.bar(
+        df_grafica,
+        x="soft skill",
+        y="avg",
+        color="inv_color",
+        error_y="std",
+        text="avg",
+        color_discrete_map={
+                       "Muy por debajo del nivel" : "#CD5C5C",
+                 "Ligeramente por debajo del nivel" : "#BDB76B",
+                 "Sobrepasa el nivel" : "#6495ED",
+                 "Cumple con el nivel" : "#8FBC8F"
+    }
+)
+    fig.update_traces(textposition="inside", insidetextanchor = "start")
+   
+    # Update layout properties
+    fig.update_layout(
+        title_text=f"Soft Skills (n={df_dropped.shape[0]})",
+        yaxis_title='Nivel Promedio: Muy bajo (0) - Muy alto (4)',
+        yaxis_range=[0, 4],
+        legend_title_text = "",
+        showlegend=True # Hide legend as colors are informational
+    )
+        
+    return fig

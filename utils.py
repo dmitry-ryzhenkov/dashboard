@@ -32,7 +32,9 @@ def filtrar(df: pd.DataFrame, dict_filtros) -> pd.DataFrame:
 
     if dict_filtros["Min Edad"] != 0 and dict_filtros["Max Edad"] != 0:
         df = df[df["edad"].between(dict_filtros["Min Edad"], dict_filtros["Max Edad"])]
-    # df = df[df["Antiguedad"] == dict_filtros["Antiguedad"]]
+    
+    if dict_filtros["Min Antiguedad"] != 0 and dict_filtros["Max Antiguedad"] != 0:
+        df = df[df["antiguedad"].between(dict_filtros["Min Antiguedad"], dict_filtros["Max Antiguedad"])]
 
     return df
 

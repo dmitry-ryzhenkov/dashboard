@@ -10,5 +10,5 @@ tables_id = {"Trabajadores"               : "tblNBHV9KDGDQNs8y",
             #  "Assessment MAPFRE"          : "tbl7EYNl618IhKAse",
             #  "Data blandas"               : "tblImXJh9fSnqrW8B",
             #  "Data Competencias técnicas" : "tbl1kSY13iQhxi1O3",
-            #  "Data Tecnologías"           : "tblca2y3nQTUPrbfx"
+             "Data Tecnologías"           : "tblca2y3nQTUPrbfx"
              }
