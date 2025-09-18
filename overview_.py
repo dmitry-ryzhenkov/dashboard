@@ -45,9 +45,9 @@ def primera_grafica(df_filtered, df_dicts):
     return fig
 
 def segunda_grafica(df_filtered, df_dicts):
-    df = pd.merge(left = df_dicts["Trabajadores"].explode("Nivel"),
+    df = pd.merge(left = df_dicts["Trabajadores"],
               right = df_dicts["Roles"][["id", "Nivel de carrera MAPFRE"]],
-              left_on = "Nivel",
+              left_on = "Nivel de carrera",
               right_on = "id")
     
     df = pd.merge(left = df_filtered, right = df, left_on = "id", right_on = "id_x", how = "left")

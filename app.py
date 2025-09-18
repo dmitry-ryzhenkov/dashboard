@@ -39,7 +39,7 @@ st.title("Dashboard de Habilidades")
 
 # Define options for the selectors
 vertical_options = list(df["nueva_vertical"].unique()) + ["TODOS"]
-rol_options = list(df["rol"].unique()) + ["TODOS"]
+rol_options = list(df["rol_que_le_corresponde"].unique()) + ["TODOS"]
 sexo_options = ["M", "V"] + ["AMBOS"]
 niveL_carrera_options = ["TODOS"]
 

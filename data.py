@@ -63,7 +63,9 @@ def load_data() -> pd.DataFrame:
     # CLEANING -------------------------------------------------------------------------
 
     df = df[[
-        "id", "fields.Nombre", "fields.Status", "fields.Email", "fields.Nivel", "fields.Rol que le corresponde",
+        "id", "fields.Nombre", "fields.Status", "fields.Email",
+        "fields.Nivel de carrera",
+        "fields.Rol que le corresponde",
         "fields.Puesto actual", "fields.Nueva vertical", "fields.Veredicto", "fields.Equipo",
         "fields.Resultado de la prueba (from Pruebas técnicas)",
         "fields.Tecnologías (from Rol que le corresponde)", "fields.Tecnologías actuales Selección IT",
@@ -71,14 +73,14 @@ def load_data() -> pd.DataFrame:
         "fields.Competencia blanda (from Rol que le corresponde)", "fields.Competencias blandas Selección IT",
         "fields.Puntaje Negocio (from Pruebas técnicas)",
         "fields.Edad", 
-        # "fields.Antigüedad",
+        "fields.Antigüedad",
         "fields.Sexo",
         ]]
     
     df.columns = df.columns.str.lower().str.replace("fields.", "")
 
     rename = {
-        "nivel" : "rol",
+        "nivel de carrera" : "rol",
         "resultado de la prueba (from pruebas técnicas)" : "prueba_tecnica",
         "tecnologías (from rol que le corresponde)" : "tecnologias_necesarias",
         "tecnologías actuales selección it" : "tecnologias",
@@ -89,7 +91,7 @@ def load_data() -> pd.DataFrame:
         "puntaje negocio (from pruebas técnicas)" : "prueba_negocio",
         "Sexo" : "sexo",
         "Edad" : "edad",
-        # "Antigüedad" : "antiguedad"
+        "Antigüedad" : "antiguedad"
     }
     
     df = df.rename(columns=rename)
