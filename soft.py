@@ -192,3 +192,80 @@ def get_soft_scores_figs(df, filter_colors):
     )
         
     return fig
+
+def sexta_grafica(df, filter_colors):
+    """Toma un dataframe filtrado y hace un plot de las competencias blandas de cada candidato."""
+    df_dropped = df.dropna(subset=["competencias_blandas", "competencias_blandas_necesarias"])
+    average_levels, std_dev_levels, required_levels = score_dataframe(df_dropped)
+
+    average_levels = {k: average_levels[k] if k in average_levels.keys() else 0 for k in required_levels.keys()}
+
+    areas = [
+        "Área intrapersonal",
+        "Área interpersonal",
+        "Área desarrollo de tareas",
+        "Área entorno",
+        "Área gerencial / management"
+    ]
+
+    figs = []
+
+    
+    req_lvls = {" ".join(k.split(" ")[2:]) : v for k, v in required_levels.items()}
+    avg_lvls = {" ".join(k.split(" ")[2:]) : v for k, v in average_levels.items()}
+    std_lvls = {" ".join(k.split(" ")[2:]): v for k, v in std_dev_levels.items()}
+
+    if len(avg_lvls) != len(std_lvls):
+        if len(avg_lvls) < len(std_lvls):
+            std_lvls = {k : v for k, v in std_lvls.items() if k in avg_lvls.keys()}
+        else:
+            avg_lvls = {k : v for k, v in avg_lvls.items() if k in std_lvls.keys()}
+    
+    colors = [get_color(avg_lvls[skill], req_lvls[skill])
+            for skill in req_lvls]
+    
+    std_lvls = [v for v in std_lvls.values()]
+
+    avg_lvls = {k : v for k, v in avg_lvls.items()}
+
+    map_color = {"#CD5C5C" : "Muy por debajo del nivel",
+                "#BDB76B" : "Ligeramente por debajo del nivel",
+                "#6495ED" : "Sobrepasa el nivel",
+                "#8FBC8F" : "Cumple con el nivel"}
+    
+    df_grafica = pd.DataFrame()
+    df_grafica["skill"] = avg_lvls.keys()
+    df_grafica["avg"] = np.round(list(avg_lvls.values()), 2)
+    df_grafica["std"] = std_lvls
+    df_grafica["color"] = colors
+    df_grafica["inv_color"] = df_grafica["color"].apply(lambda x : map_color[x])
+
+    df_grafica = df_grafica[df_grafica["color"].isin(filter_colors)]
+
+    fig = go.Figure()
+
+    fig = px.bar(
+    df_grafica,
+    x="skill",
+    y="avg",
+    color="inv_color",
+    error_y="std",
+    text="avg",
+    color_discrete_map={
+                    "Muy por debajo del nivel" : "#CD5C5C",
+                "Ligeramente por debajo del nivel" : "#BDB76B",
+                "Sobrepasa el nivel" : "#6495ED",
+                "Cumple con el nivel" : "#8FBC8F"
+}
+)
+    fig.update_traces(textposition="inside", insidetextanchor = "start")
+            # Update layout properties
+    fig.update_layout(
+            title_text=f"Soft skills (n={df_dropped.shape[0]})",
+            yaxis_title='Nivel Promedio: Muy bajo (0) - Muy alto (4)',
+            yaxis_range=[0, 6],
+            legend_title_text = "",
+            showlegend=True # Hide legend as colors are informational
+        )
+
+    return fig

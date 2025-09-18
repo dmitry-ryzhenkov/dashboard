@@ -151,9 +151,9 @@ with tab1:
             st.plotly_chart(fig4, use_container_width=True)
 
         st.plotly_chart(fig5, use_container_width=True)
-        # st.write(df_filtered)
-        # fig6 = soft.get_soft_scores_figs(df = df, filter_colors = filter_colors)
-        # st.plotly_chart(fig6, use_container_width=True)
+    
+        fig6 = soft.sexta_grafica(df = df, filter_colors = filter_colors)
+        st.plotly_chart(fig6, use_container_width=True)
 
         
 
