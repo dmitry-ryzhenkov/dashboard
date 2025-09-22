@@ -46,7 +46,7 @@ niveL_carrera_options = ["TODOS"]
 dict_filtros = {"Vertical"       : vertical_options[-1],
                 "Rol"            : rol_options[-1],
                 "Min Antiguedad" : 0,
-                "MAx Antiguedad" : 0,
+                "Max Antiguedad" : 0,
                 "Nivel Carrera"  : niveL_carrera_options[-1],
                 "Min Edad"       : 0,
                 "Max Edad"       : 0,
