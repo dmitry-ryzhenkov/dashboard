@@ -94,7 +94,7 @@ def get_soft_skills_scores_figs(df, filter_colors):
         avg_lvls = {k : v for k, v in avg_lvls.items()}
 
         map_color = {"#FF6961" : "Muy por debajo del nivel",
-                 "#EFA94A " : "Ligeramente por debajo del nivel",
+                 "#EFA94A" : "Ligeramente por debajo del nivel",
                  "#20603D" : "Sobrepasa el nivel",
                  "#77DD77" : "Cumple con el nivel"}
         
@@ -117,7 +117,7 @@ def get_soft_skills_scores_figs(df, filter_colors):
         error_y="std",
         text="avg",
         color_discrete_map={"Muy por debajo del nivel"         : "#FF6961",
-                     "Ligeramente por debajo del nivel" : "#EFA94A ",
+                     "Ligeramente por debajo del nivel" : "#EFA94A",
                      "Sobrepasa el nivel"               : "#20603D",
                      "Cumple con el nivel"              : "#77DD77"}
 )
@@ -152,7 +152,7 @@ def get_soft_scores_figs(df, filter_colors):
     average_levels = {k : v for k, v in average_levels.items()}
 
     map_color = {"#FF6961" : "Muy por debajo del nivel",
-                 "#EFA94A " : "Ligeramente por debajo del nivel",
+                 "#EFA94A" : "Ligeramente por debajo del nivel",
                  "#20603D" : "Sobrepasa el nivel",
                  "#77DD77" : "Cumple con el nivel"}
     df_grafica = pd.DataFrame()
@@ -225,7 +225,7 @@ def sexta_grafica(df, filter_colors):
     avg_lvls = {k : v for k, v in avg_lvls.items()}
 
     map_color = {"#FF6961" : "Muy por debajo del nivel",
-                 "#EFA94A " : "Ligeramente por debajo del nivel",
+                 "#EFA94A" : "Ligeramente por debajo del nivel",
                  "#20603D" : "Sobrepasa el nivel",
                  "#77DD77" : "Cumple con el nivel"}
     
