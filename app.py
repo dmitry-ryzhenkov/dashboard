@@ -126,9 +126,9 @@ with tab1:
                                        default = ["Cumple con el nivel", "Sobrepasa el nivel", "Ligeramente por debajo del nivel", "Muy por debajo del nivel"])
         
         map_color = {"Muy por debajo del nivel"         : "#FF0000",
-                     "Ligeramente por debajo del nivel" : "#FFFF00",
-                     "Sobrepasa el nivel"               : "#013220",
-                     "Cumple con el nivel"              : "#90EE90"}
+                     "Ligeramente por debajo del nivel" : "#FFFFE0 ",
+                     "Sobrepasa el nivel"               : "#20603D",
+                     "Cumple con el nivel"              : "#B4D3B2"}
         
         filter_colors = [map_color[color] for color in filter_colors]
 
@@ -161,19 +161,19 @@ with tab2:
     st.header("Análisis de Habilidades Técnicas")
 
     map_color = {"Muy por debajo del nivel"         : "#FF0000",
-                     "Ligeramente por debajo del nivel" : "#FFFF00",
-                     "Sobrepasa el nivel"               : "#013220",
-                     "Cumple con el nivel"              : "#90EE90"}
+                     "Ligeramente por debajo del nivel" : "#FFFFE0 ",
+                     "Sobrepasa el nivel"               : "#20603D",
+                     "Cumple con el nivel"              : "#B4D3B2"}
 
 
     filter_colors = st.multiselect(label = "Filtro",
                                    options = ["Cumple con el nivel", "Sobrepasa el nivel", "Ligeramente por debajo del nivel", "Muy por debajo del nivel"],
                                    default = ["Cumple con el nivel", "Sobrepasa el nivel", "Ligeramente por debajo del nivel", "Muy por debajo del nivel"])
     
-    map_color = {"Muy por debajo del nivel"         : "#FF0000",
-                     "Ligeramente por debajo del nivel" : "#FFFF00",
-                     "Sobrepasa el nivel"               : "#013220",
-                     "Cumple con el nivel"              : "#90EE90"}
+    map_color = {"Muy por debajo del nivel"         : "#FF6961",
+                     "Ligeramente por debajo del nivel" : "#FFFFE0 ",
+                     "Sobrepasa el nivel"               : "#20603D",
+                     "Cumple con el nivel"              : "#B4D3B2"}
     
     filter_colors = [map_color[color] for color in filter_colors]
 
