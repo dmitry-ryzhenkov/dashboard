@@ -43,24 +43,22 @@ rol_options = list(df["rol_que_le_corresponde"].unique()) + ["TODOS"]
 sexo_options = ["M", "V"] + ["AMBOS"]
 niveL_carrera_options = ["TODOS"]
 
-dict_filtros = {"Vertical"       : vertical_options[-1],
-                "Rol"            : rol_options[-1],
+dict_filtros = {"Vertical"       : [],
+                "Rol"            : [],
                 "Min Antiguedad" : 0,
                 "Max Antiguedad" : 0,
-                "Nivel Carrera"  : niveL_carrera_options[-1],
+                # "Nivel Carrera"  : niveL_carrera_options[-1],
                 "Min Edad"       : 0,
                 "Max Edad"       : 0,
                 "Sexo"           : sexo_options[-1]}
 
 with st.sidebar.form(key = "Filtros"):
 
-    selected_vertical = st.selectbox(label  = "Vertical",
-                                    options = vertical_options,
-                                    index = len(vertical_options) - 1)
+    selected_vertical = st.multiselect(label  = "Vertical",
+                                      options = vertical_options)
     
-    selected_rol = st.selectbox(label   = "Rol",
-                                options = rol_options,
-                                index = len(rol_options) - 1)
+    selected_rol = st.multiselect(label   = "Rol",
+                                  options = rol_options)
     
     selected_min_antiguedad = st.number_input(label     = "Min Antiguedad",
                                               min_value = 0,
@@ -74,8 +72,8 @@ with st.sidebar.form(key = "Filtros"):
                                               value     = 0,
                                               step      = 1)
     
-    selected_nivel_carrera = st.selectbox(label   = "Nivel Carrera",
-                                          options = niveL_carrera_options)
+    # selected_nivel_carrera = st.selectbox(label   = "Nivel Carrera",
+    #                                       options = niveL_carrera_options)
     
     selected_min_age = st.number_input(label     = "Min Edad",
                                        min_value = 0,
@@ -98,7 +96,7 @@ with st.sidebar.form(key = "Filtros"):
                         "Rol"            : selected_rol,
                         "Min Antiguedad" : selected_min_antiguedad,
                         "Max Antiguedad" : selected_max_antiguedad,
-                        "Nivel Carrera"  : selected_nivel_carrera,
+                        # "Nivel Carrera"  : selected_nivel_carrera,
                         "Min Edad"       : selected_min_age,
                         "Max Edad"       : selected_max_age,
                         "Sexo"           : selected_sex}
