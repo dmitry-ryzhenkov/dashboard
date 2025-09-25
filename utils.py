@@ -18,17 +18,17 @@ def filtrar(df: pd.DataFrame, dict_filtros) -> pd.DataFrame:
 
     """Devuelve únicamente a las personas con la vertical y rol seleccionados"""
 
-    if dict_filtros["Vertical"] != []:
-        df = df[df["nueva_vertical"].isin(dict_filtros["Vertical"])]
+    if dict_filtros["Vertical"] != "TODOS":
+        df = df[df["nueva_vertical"] == dict_filtros["Vertical"]]
     
-    if dict_filtros["Rol"] != []:
-        df = df[df["rol_que_le_corresponde"].isin(dict_filtros["Rol"])]
+    if dict_filtros["Rol"] != "TODOS":
+        df = df[df["rol_que_le_corresponde"] == dict_filtros["Rol"]]
 
     if dict_filtros["Sexo"] != "AMBOS":
         df = df[df["sexo"] == dict_filtros["Sexo"]]
 
-    # if dict_filtros["Nivel Carrera"] != "TODOS":
-    #     df = df[df["Nivel Carrera"] == dict_filtros["Nivel Carrera"]]
+    if dict_filtros["Nivel Carrera"] != "TODOS":
+        df = df[df["Nivel Carrera"] == dict_filtros["Nivel Carrera"]]
 
     if (dict_filtros["Min Edad"] != 0) | (dict_filtros["Max Edad"] != 0):
         df = df[df["edad"].between(dict_filtros["Min Edad"], dict_filtros["Max Edad"])]

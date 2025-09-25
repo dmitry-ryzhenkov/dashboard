@@ -169,6 +169,8 @@ def quinta_grafica(df_filtered, df_dicts):
 
     df_cumple_certificaciones_2["porcentaje"] = df_cumple_certificaciones_2["id_x"].apply(lambda x : x/total_count)
 
+    # df_cumple_certificaciones_2
+
     fig = px.bar(data_frame = df_cumple_certificaciones_2, x = "Cumple Certificacion", y = "porcentaje", color = "nueva_vertical")
 
     fig.update_layout(yaxis_range=[0, 1])
