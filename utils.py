@@ -22,7 +22,7 @@ def filtrar(df: pd.DataFrame, dict_filtros) -> pd.DataFrame:
         df = df[df["nueva_vertical"] == dict_filtros["Vertical"]]
     
     if dict_filtros["Rol"] != "TODOS":
-        df = df[df["rol_que_le_corresponde"] == dict_filtros["Rol"]]
+        df = df[df["rol"] == dict_filtros["Vertical"]]
 
     if dict_filtros["Sexo"] != "AMBOS":
         df = df[df["sexo"] == dict_filtros["Sexo"]]
