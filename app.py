@@ -206,12 +206,14 @@ with tab3:
         overview_fig_2 = overview_.segunda_grafica(df_filtered = df_filtered, df_dicts = df_dicts)
         overview_fig_3 = overview_.grafica_veredicto_vertical(df_filtered = df_filtered, df_dicts = df_dicts)
         overview_fig_4 = overview_.grafica_veredicto_rol(df_filtered = df_filtered, df_dicts = df_dicts)
+        overview_fig_5 = overview_.quinta_grafica(df_filtered = df_filtered, df_dicts = df_dicts)
 
         # Display the charts one after another
         st.plotly_chart(overview_fig_1, use_container_width=True)
         st.plotly_chart(overview_fig_2, use_container_width=True)
         st.plotly_chart(overview_fig_3, use_container_width=True)
         st.plotly_chart(overview_fig_4, use_container_width=True)
+        st.plotly_chart(overview_fig_5, use_container_width=True)
 
 # --- Tab 4: Tech test Content ---
 with tab4:

@@ -124,6 +124,7 @@ def grafica_veredicto_vertical(df_filtered, df_dicts):
 # Rol y Veredicto
 def grafica_veredicto_rol(df_filtered, df_dicts):
 
+
     df_func = pd.merge(left = df_filtered, right = df_dicts["Trabajadores"].explode("Nuevo puesto"), left_on = "id", right_on = "id", how = "left")
     
     df_rol_veredicto = pd.merge(left = df_func.groupby(by = ["Nuevo puesto", "Veredicto"], as_index = False).agg({"id" : "count"}),
@@ -172,4 +173,3 @@ def quinta_grafica(df_filtered, df_dicts):
 
     fig.update_layout(yaxis_range=[0, 1])
     return fig
-    
