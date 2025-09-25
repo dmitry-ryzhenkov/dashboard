@@ -152,7 +152,7 @@ with tab1:
 
         st.plotly_chart(fig5, use_container_width=True)
     
-        fig6 = soft.sexta_grafica(df = df_filtered, filter_colors = filter_colors)
+        fig6 = soft.sexta_grafica(df = df, filter_colors = filter_colors)
         st.plotly_chart(fig6, use_container_width=True)
 
         
