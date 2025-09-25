@@ -126,7 +126,7 @@ with tab1:
                                        default = ["Cumple con el nivel", "Sobrepasa el nivel", "Ligeramente por debajo del nivel", "Muy por debajo del nivel"])
         
         map_color = {"Muy por debajo del nivel"         : "#FF0000",
-                     "Ligeramente por debajo del nivel" : "#EFA94A",
+                     "Ligeramente por debajo del nivel" : "#FFFFE0 ",
                      "Sobrepasa el nivel"               : "#20603D",
                      "Cumple con el nivel"              : "#B4D3B2"}
         
@@ -161,7 +161,7 @@ with tab2:
     st.header("Análisis de Habilidades Técnicas")
 
     map_color = {"Muy por debajo del nivel"         : "#FF0000",
-                     "Ligeramente por debajo del nivel" : "#EFA94A",
+                     "Ligeramente por debajo del nivel" : "#FFFFE0 ",
                      "Sobrepasa el nivel"               : "#20603D",
                      "Cumple con el nivel"              : "#B4D3B2"}
 
@@ -171,7 +171,7 @@ with tab2:
                                    default = ["Cumple con el nivel", "Sobrepasa el nivel", "Ligeramente por debajo del nivel", "Muy por debajo del nivel"])
     
     map_color = {"Muy por debajo del nivel"         : "#FF6961",
-                     "Ligeramente por debajo del nivel" : "#EFA94A",
+                     "Ligeramente por debajo del nivel" : "#FFFFE0 ",
                      "Sobrepasa el nivel"               : "#20603D",
                      "Cumple con el nivel"              : "#B4D3B2"}
     
