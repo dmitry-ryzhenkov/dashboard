@@ -43,9 +43,9 @@ def get_color(actual_level, required_level):
     difference = actual_level - required_level
 
     if difference < -0.8:
-        return "#FF0000"
+        return "#CD5C5C"
     if difference < 0:
-        return "#FFFF00"
+        return "#BDB76B"
     if difference <= 0.8:
-        return "#90EE90"
-    else: return "#013220"
+        return "#8FBC8F"
+    else: return "#6495ED"
