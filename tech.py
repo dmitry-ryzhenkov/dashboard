@@ -81,10 +81,10 @@ def get_tech_skills_scores_figs(df, filter_colors):
 
     average_levels = {k : v for k, v in average_levels.items()}
 
-    map_color = {"#FF0000" : "Muy por debajo del nivel",
-                 "#FFFF00" : "Ligeramente por debajo del nivel",
-                 "#013220" : "Sobrepasa el nivel",
-                 "#90EE90" : "Cumple con el nivel"}
+    map_color = {"#CD5C5C" : "Muy por debajo del nivel",
+                 "#BDB76B" : "Ligeramente por debajo del nivel",
+                 "#6495ED" : "Sobrepasa el nivel",
+                 "#8FBC8F" : "Cumple con el nivel"}
     
     df_grafica = pd.DataFrame()
     df_grafica["skill"] = average_levels.keys()
