@@ -211,9 +211,9 @@ def sexta_grafica(df, filter_colors):
     figs = []
 
     
-    req_lvls = {" ".join(k.split(" ")[2:]) : v for k, v in required_levels.items()}
-    avg_lvls = {" ".join(k.split(" ")[2:]) : v for k, v in average_levels.items()}
-    std_lvls = {" ".join(k.split(" ")[2:]): v for k, v in std_dev_levels.items()}
+    req_lvls = {k : v for k, v in required_levels.items()}
+    avg_lvls = {k : v for k, v in average_levels.items()}
+    std_lvls = {k : v for k, v in std_dev_levels.items()}
 
     if len(avg_lvls) != len(std_lvls):
         if len(avg_lvls) < len(std_lvls):
