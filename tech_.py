@@ -80,10 +80,10 @@ def get_tech_scores_figs(df, filter_colors):
 
     average_levels = {k : v for k, v in average_levels.items()}
 
-    map_color = {"#FF6961" : "Muy por debajo del nivel",
-                 "#FFFFE0 " : "Ligeramente por debajo del nivel",
-                 "#20603D" : "Sobrepasa el nivel",
-                 "#B4D3B2" : "Cumple con el nivel"}
+    map_color = {"#FF0000" : "Muy por debajo del nivel",
+                 "#FFFF00" : "Ligeramente por debajo del nivel",
+                 "#013220" : "Sobrepasa el nivel",
+                 "#90EE90" : "Cumple con el nivel"}
     df_grafica = pd.DataFrame()
     df_grafica["skill"] = average_levels.keys()
     df_grafica["avg"] = np.round(list(average_levels.values()), 2)
@@ -100,10 +100,10 @@ def get_tech_scores_figs(df, filter_colors):
         color="inv_color",
         error_y="std",
         text="avg",
-        color_discrete_map = {"Muy por debajo del nivel"         : "#FF6961",
-                     "Ligeramente por debajo del nivel" : "#FFFFE0 ",
-                     "Sobrepasa el nivel"               : "#20603D",
-                     "Cumple con el nivel"              : "#B4D3B2"}
+        color_discrete_map = {"Muy por debajo del nivel"         : "#FF0000",
+                     "Ligeramente por debajo del nivel" : "#FFFF00",
+                     "Sobrepasa el nivel"               : "#013220",
+                     "Cumple con el nivel"              : "#90EE90"}
     
 )
     fig.update_traces(textposition="inside", insidetextanchor = "start")
