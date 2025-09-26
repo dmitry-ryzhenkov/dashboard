@@ -165,4 +165,13 @@ def quinta_grafica(df_filtered, df_dicts):
 
     df_cumple_certificaciones_2 = pd.merge(left = df_cumple_certificaciones, right = df_dicts["Verticales"], left_on = "nueva_vertical", right_on = "id", how = "left")[["nueva_vertical", "Cumple Certificacion", "id_x"]]
 
-    return px.bar(data_frame = df_cumple_certificaciones_2, x = "Cumple Certificacion", y = "id_x", color = "nueva_vertical")
+    total_count = df_cumple_certificaciones_2.groupby("Cumple Certificacion").agg({"id_x" : "sum"}).sum()["id_x"]#.to_dict()["id_x"]
+
+    df_cumple_certificaciones_2["porcentaje"] = df_cumple_certificaciones_2["id_x"].apply(lambda x : x/total_count)
+
+    # df_cumple_certificaciones_2
+
+    fig = px.bar(data_frame = df_cumple_certificaciones_2, x = "Cumple Certificacion", y = "porcentaje", color = "nueva_vertical")
+
+    fig.update_layout(yaxis_range=[0, 1])
+    return fig
