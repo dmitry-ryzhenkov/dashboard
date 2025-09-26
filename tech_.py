@@ -81,7 +81,7 @@ def get_tech_scores_figs(df, filter_colors):
     average_levels = {k : v for k, v in average_levels.items()}
 
     map_color = {"#FF6961" : "Muy por debajo del nivel",
-                 "#EFA94A" : "Ligeramente por debajo del nivel",
+                 "#FFFFE0 " : "Ligeramente por debajo del nivel",
                  "#20603D" : "Sobrepasa el nivel",
                  "#B4D3B2" : "Cumple con el nivel"}
     df_grafica = pd.DataFrame()
@@ -101,7 +101,7 @@ def get_tech_scores_figs(df, filter_colors):
         error_y="std",
         text="avg",
         color_discrete_map = {"Muy por debajo del nivel"         : "#FF6961",
-                     "Ligeramente por debajo del nivel" : "#EFA94A",
+                     "Ligeramente por debajo del nivel" : "#FFFFE0 ",
                      "Sobrepasa el nivel"               : "#20603D",
                      "Cumple con el nivel"              : "#B4D3B2"}
     
