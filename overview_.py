@@ -124,6 +124,7 @@ def grafica_veredicto_vertical(df_filtered, df_dicts):
 # Rol y Veredicto
 def grafica_veredicto_rol(df_filtered, df_dicts):
 
+
     df_func = pd.merge(left = df_filtered, right = df_dicts["Trabajadores"].explode("Nuevo puesto"), left_on = "id", right_on = "id", how = "left")
     
     df_rol_veredicto = pd.merge(left = df_func.groupby(by = ["Nuevo puesto", "Veredicto"], as_index = False).agg({"id" : "count"}),
@@ -143,3 +144,25 @@ def grafica_veredicto_rol(df_filtered, df_dicts):
     df_rol_veredicto = df_rol_veredicto.sort_values("Veredicto")
 
     return px.bar(data_frame = df_rol_veredicto, x = "Veredicto", y = "count", color = "Rol")
+
+
+def quinta_grafica(df_filtered, df_dicts):
+    df_faltan = df_dicts["Certificaciones"].explode("Trabajadores que les faltan estas certificaciones")[["Certificaciones", "Trabajadores que les faltan estas certificaciones"]]
+
+    df_tienen = df_dicts["Certificaciones"].explode("Trabajadores")[["Certificaciones", "Trabajadores"]].dropna()
+
+    df_faltan["Cumple Certificacion"] = 0
+    df_tienen["Cumple Certificacion"] = 1
+
+    df_faltan.columns = ["Trabajadores" if x.startswith("Trabajadores") else x for x in df_faltan.columns]
+
+    df_cumple_certificaciones = pd.concat([df_tienen, df_faltan])
+
+    df_cumple_certificaciones = pd.merge(left = df_filtered, right = df_cumple_certificaciones, left_on = "id", right_on = "Trabajadores", how = "left")
+
+    
+    df_cumple_certificaciones = df_cumple_certificaciones.groupby(["nueva_vertical", "Cumple Certificacion"], as_index = False).agg({"id" : "count"})
+
+    df_cumple_certificaciones_2 = pd.merge(left = df_cumple_certificaciones, right = df_dicts["Verticales"], left_on = "nueva_vertical", right_on = "id", how = "left")[["nueva_vertical", "Cumple Certificacion", "id_x"]]
+
+    return px.bar(data_frame = df_cumple_certificaciones_2, x = "Cumple Certificacion", y = "id_x", color = "nueva_vertical")
