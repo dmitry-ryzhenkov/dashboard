@@ -128,7 +128,7 @@ with tab1:
         map_color = {"Muy por debajo del nivel"         : "#FF0000",
                      "Ligeramente por debajo del nivel" : "#EFA94A",
                      "Sobrepasa el nivel"               : "#20603D",
-                     "Cumple con el nivel"              : "#77DD77"}
+                     "Cumple con el nivel"              : "#B4D3B2"}
         
         filter_colors = [map_color[color] for color in filter_colors]
 
@@ -163,7 +163,7 @@ with tab2:
     map_color = {"Muy por debajo del nivel"         : "#FF0000",
                      "Ligeramente por debajo del nivel" : "#EFA94A",
                      "Sobrepasa el nivel"               : "#20603D",
-                     "Cumple con el nivel"              : "#77DD77"}
+                     "Cumple con el nivel"              : "#B4D3B2"}
 
 
     filter_colors = st.multiselect(label = "Filtro",
@@ -173,7 +173,7 @@ with tab2:
     map_color = {"Muy por debajo del nivel"         : "#FF6961",
                      "Ligeramente por debajo del nivel" : "#EFA94A",
                      "Sobrepasa el nivel"               : "#20603D",
-                     "Cumple con el nivel"              : "#77DD77"}
+                     "Cumple con el nivel"              : "#B4D3B2"}
     
     filter_colors = [map_color[color] for color in filter_colors]
 
