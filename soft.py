@@ -61,6 +61,7 @@ def score_dataframe(df: pd.DataFrame, actual_skills_col="competencias_blandas", 
 def get_soft_skills_scores_figs(df, filter_colors):
     """Toma un dataframe filtrado y hace un plot de las competencias blandas de cada candidato."""
     df_dropped = df.dropna(subset=["competencias_blandas", "competencias_blandas_necesarias"])
+    print("NANS SHAPE:", df_dropped.shape, flush=True)
     average_levels, std_dev_levels, required_levels = score_dataframe(df_dropped)
 
     average_levels = {k: average_levels[k] if k in average_levels.keys() else 0 for k in required_levels.keys()}
