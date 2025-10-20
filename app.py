@@ -11,6 +11,8 @@ import overview_
 import pruebas_tecnicas
 import pandas as pd
 
+print("DEBUG:", st.secrets.get("DEBUG"))
+
 DEBUG = debug if (debug := st.secrets.get("DEBUG")) else False
 
 # ---------------------------------------------------------------------------------------------
