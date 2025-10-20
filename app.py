@@ -11,6 +11,8 @@ import overview_
 import pruebas_tecnicas
 import pandas as pd
 
+DEBUG = debug if (debug := st.secrets.get("DEBUG")) else False
+
 # ---------------------------------------------------------------------------------------------
 # Page Configuration and Data Loading
 # ---------------------------------------------------------------------------------------------
@@ -24,12 +26,14 @@ def cached_load_data():
     return load_data()
 
 df = cached_load_data()
+if DEBUG: print("cached_load_data SHAPE:", df.shape)
 
 @st.cache_data
 def cached_extract_all_data():
     return extract_all_airtable(tables_id = tables_id)
 
 df_dicts = cached_extract_all_data()
+if DEBUG: print("cached_extract_all_data SHAPE:", df.shape)
 
 # ---------------------------------------------------------------------------------------------
 # Main App Layout
@@ -100,11 +104,13 @@ with st.sidebar.form(key = "Filtros"):
                         "Min Edad"       : selected_min_age,
                         "Max Edad"       : selected_max_age,
                         "Sexo"           : selected_sex}
+if DEBUG: print("filtros:", dict_filtros)
     
     
 # --- Data Filtering ---
 # Filter the data based on selections. This happens every time a widget is changed.
 df_filtered = filtrar(df = df, dict_filtros = dict_filtros)
+if DEBUG: print("df_filtered SHAPE:", df.shape)
 
 # --- Tabs ---
 # Streamlit's st.tabs is a direct replacement for dcc.Tabs
