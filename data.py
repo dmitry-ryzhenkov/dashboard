@@ -61,6 +61,10 @@ def load_data() -> pd.DataFrame:
     df_vert = extract_airtable(app_id, table_id, AIRTABLE_API_KEY)
 
     # CLEANING -------------------------------------------------------------------------
+    print(f"\n\n\n\nDATAFRAME\n\n\n\n")
+    for col in df.columns:
+        print(col, end=" | ")
+    print(f"\n\n\n\n")
 
     df = df[[
         "id", "fields.Nombre", "fields.Status", "fields.Email",
@@ -68,13 +72,16 @@ def load_data() -> pd.DataFrame:
         "fields.Rol que le corresponde",
         "fields.Puesto actual", "fields.Nueva vertical", "fields.Veredicto", "fields.Equipo",
         "fields.Resultado de la prueba (from Pruebas técnicas)",
-        "fields.Tecnologías (from Rol que le corresponde)", "fields.Tecnologías actuales Selección IT",
-        "fields.Competencias técnicas (from Rol que le corresponde)", "fields.Competencias técnicas Selección IT",
+        "fields.TEC necesarias (from Rol que le corresponde)", "fields.Tecnologías actuales Selección IT",
+        "fields.CompT necesarias (from Rol que le corresponde)", "fields.Competencias técnicas Selección IT",
         "fields.Competencia blanda (from Rol que le corresponde)", "fields.Competencias blandas Selección IT",
         "fields.Puntaje Negocio (from Pruebas técnicas)",
         "fields.Edad", 
         "fields.Antigüedad",
         "fields.Sexo",
+        "fields.Bloques",
+        "fields.Área",
+        "fields.Nivel de carrera MAPFRE (from Rol que le corresponde)"
         ]]
     
     df.columns = df.columns.str.lower().str.replace("fields.", "")
@@ -82,16 +89,19 @@ def load_data() -> pd.DataFrame:
     rename = {
         "nivel de carrera" : "rol",
         "resultado de la prueba (from pruebas técnicas)" : "prueba_tecnica",
-        "tecnologías (from rol que le corresponde)" : "tecnologias_necesarias",
+        "tec necesarias (from rol que le corresponde)" : "tecnologias_necesarias",
         "tecnologías actuales selección it" : "tecnologias",
-        "competencias técnicas (from rol que le corresponde)" : "competencias_tecnicas_necesarias",
+        "compt necesarias (from rol que le corresponde)" : "competencias_tecnicas_necesarias",
         "competencias técnicas selección it" : "competencias_tecnicas",
         "competencia blanda (from rol que le corresponde)" : "competencias_blandas_necesarias",
         "competencias blandas selección it" : "competencias_blandas",
         "puntaje negocio (from pruebas técnicas)" : "prueba_negocio",
-        "Sexo" : "sexo",
-        "Edad" : "edad",
-        "Antigüedad" : "antiguedad"
+        "sexo" : "sexo",
+        "edad" : "edad",
+        "antigüedad" : "antiguedad",
+        "bloques" : "bloque",
+        "área" : "area",
+        "nivel de carrera mapfre (from rol que le corresponde)" : "nivel"
     }
     
     df = df.rename(columns=rename)

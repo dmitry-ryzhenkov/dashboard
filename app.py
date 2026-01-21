@@ -49,7 +49,9 @@ rol_options = list(df["rol_que_le_corresponde"].unique()) + ["TODOS"]
 sexo_options = ["M", "V"] + ["AMBOS"]
 niveL_carrera_options = ["TODOS"]
 
-dict_filtros = {"Vertical"       : [],
+dict_filtros = {"Bloque"         : [],
+                "Area"           : [],
+                "Vertical"       : [],
                 "Rol"            : [],
                 "Min Antiguedad" : 0,
                 "Max Antiguedad" : 0,
@@ -59,6 +61,19 @@ dict_filtros = {"Vertical"       : [],
                 "Sexo"           : sexo_options[-1]}
 
 with st.sidebar.form(key = "Filtros"):
+
+    selected_block = st.multiselect(label = "Bloque", options = ["Bloque 1", "Bloque 2"])
+
+    selected_area = st.multiselect(label = "Area", options = [
+        "Data & IA",
+        "Comercial y canales",
+        "Verti",
+        "Transformación de la operación",
+        "Técnica",
+        "Personas y organización",
+        "Bloque 2",
+        "Dirección general técnica"
+    ])
 
     selected_vertical = st.multiselect(label  = "Vertical",
                                       options = vertical_options)
@@ -97,8 +112,11 @@ with st.sidebar.form(key = "Filtros"):
                                 index = len(sexo_options) - 1)
 
     submitted = st.form_submit_button(label = "Aplicar")
+
     if submitted:
-        dict_filtros = {"Vertical"       : selected_vertical,
+        dict_filtros = {"Bloque"         : selected_block,
+                        "Area"           : selected_area,
+                        "Vertical"       : selected_vertical,
                         "Rol"            : selected_rol,
                         "Min Antiguedad" : selected_min_antiguedad,
                         "Max Antiguedad" : selected_max_antiguedad,
@@ -106,6 +124,7 @@ with st.sidebar.form(key = "Filtros"):
                         "Min Edad"       : selected_min_age,
                         "Max Edad"       : selected_max_age,
                         "Sexo"           : selected_sex}
+
 if DEBUG: print("filtros:", dict_filtros, flush=True)
     
     

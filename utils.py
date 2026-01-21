@@ -18,6 +18,12 @@ def filtrar(df: pd.DataFrame, dict_filtros) -> pd.DataFrame:
 
     """Devuelve únicamente a las personas con la vertical y rol seleccionados"""
 
+    if dict_filtros["Bloque"] != []:
+        df = df[df["bloque"].isin(dict_filtros["Bloque"])]
+
+    if dict_filtros["Area"] != []:
+        df = df[df["area"].isin(dict_filtros["Area"])]
+
     if dict_filtros["Vertical"] != []:
         df = df[df["nueva_vertical"].isin(dict_filtros["Vertical"])]
     

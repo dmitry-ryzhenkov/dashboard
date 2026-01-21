@@ -24,7 +24,11 @@ def extract_comp_data(comp: str) -> tuple[str, int]:
 
 def get_required_levels(row: pd.Series, required_skills_col: str):
     """Callback que extrae los niveles de la competencias necesarias, proporcionado el nombre de la columna que las guarda."""
-    required_skills = [extract_comp_data(comp) for comp in row[required_skills_col]]
+    # print(row[required_skills_col])
+    if isinstance(row[required_skills_col], list):
+        required_skills = [extract_comp_data(comp) for comp in row[required_skills_col]]
+    else:
+        required_skills = {}
     return {skill: level for skill, level in required_skills}
 
 def score_dataframe(df: pd.DataFrame, actual_skills_col="tecnologias", required_skills_col="tecnologias_necesarias"):
