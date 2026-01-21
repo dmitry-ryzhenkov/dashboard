@@ -81,6 +81,8 @@ def get_tech_skills_scores_figs(df, filter_colors):
 
     average_levels = {k : v for k, v in average_levels.items()}
 
+    target_values = [required_levels[k] for k in average_levels.keys()] 
+
     map_color = {"#CD5C5C" : "Muy por debajo del nivel",
                  "#BDB76B" : "Ligeramente por debajo del nivel",
                  "#6495ED" : "Sobrepasa el nivel",
@@ -90,6 +92,7 @@ def get_tech_skills_scores_figs(df, filter_colors):
     df_grafica["skill"] = average_levels.keys()
     df_grafica["avg"] = np.round(list(average_levels.values()), 2)
     df_grafica["std"] = std_levels
+    df_grafica["target"] = target_values
     df_grafica["color"] = colors
     df_grafica["inv_color"] = df_grafica["color"].apply(lambda x : map_color[x])
 
@@ -125,12 +128,13 @@ def get_tech_skills_scores_figs(df, filter_colors):
         error_y="std",
         text="avg",
         color_discrete_map={
-                       "Muy por debajo del nivel" : "#CD5C5C",
-                 "Ligeramente por debajo del nivel" : "#BDB76B",
-                 "Sobrepasa el nivel" : "#6495ED",
-                 "Cumple con el nivel" : "#8FBC8F"
-    }
-)
+                        "Muy por debajo del nivel" : "#CD5C5C",
+                        "Ligeramente por debajo del nivel" : "#BDB76B",
+                        "Sobrepasa el nivel" : "#6495ED",
+                        "Cumple con el nivel" : "#8FBC8F"
+                },
+        hover_data=df_grafica[["skill", "avg", "std", "target"]]
+    )
     fig.update_traces(textposition="inside", insidetextanchor = "start")
 
 
